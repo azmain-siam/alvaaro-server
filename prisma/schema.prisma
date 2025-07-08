@@ -1,0 +1,217 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String             @unique @default(uuid())
+  fullName      String
+  email         String             @unique
+  password      String
+  image         String
+  role          UserRole           @default(USER)
+  isDeleted     Boolean            @default(false)
+  Seller        Seller?
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+  Subscriptions UserSubscriptions?
+}
+
+model Seller {
+  id                 String       @unique @default(uuid())
+  userId             String       @unique
+  user               User         @relation(fields: [userId], references: [id])
+  companyName        String
+  companyWebsite     String
+  phone              String
+  address            String
+  state              String
+  city               String
+  zip                String
+  isVerified         Boolean      @default(false)
+  subscriptionStatus Boolean      @default(false)
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+  Product            Product[]
+  Car                Car[]
+  Watch              Watch[]
+  Jewellery          Jewellery[]
+  RealEstate         RealEstate[]
+  Yacht              Yacht[]
+}
+
+model UserSubscriptions {
+  id             String   @unique @default(uuid())
+  userId         String   @unique
+  user           User     @relation(fields: [userId], references: [id])
+  subscribedPlan String
+  amount         String
+  durationDays   String
+  isActive       Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Product {
+  id          String       @unique @default(uuid())
+  sellerId    String
+  seller      Seller       @relation(fields: [sellerId], references: [id])
+  name        String
+  description String
+  price       String
+  images      String[]
+  category    CategoryType
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  Car         Car?
+  Watch       Watch?
+  Jewellery   Jewellery?
+  RealEstate  RealEstate?
+  Yacht       Yacht?
+}
+
+// Cars
+model Car {
+  id           String  @unique @default(uuid())
+  productId    String  @unique
+  product      Product @relation(fields: [productId], references: [id])
+  sellerId     String
+  seller       Seller  @relation(fields: [sellerId], references: [id])
+  condition    String
+  manufacture  String
+  year         String
+  model        String
+  carBodyStyle String
+  transmission String
+  mileage      String
+  cylinders    String
+  tractionType String
+  fuelType     String
+}
+
+// Watches
+model Watch {
+  id              String   @unique @default(uuid())
+  productId       String   @unique
+  product         Product  @relation(fields: [productId], references: [id])
+  sellerId        String
+  seller          Seller   @relation(fields: [sellerId], references: [id])
+  condition       String
+  manufacture     String
+  warranty        String
+  model           String
+  waterResistance String
+  displayType     String
+  strapMaterial   String
+  movement        String
+  size            String
+  tractionType    String
+  features        String[]
+}
+
+// Jewelry
+model Jewellery {
+  id              String   @unique @default(uuid())
+  productId       String   @unique
+  product         Product  @relation(fields: [productId], references: [id])
+  sellerId        String
+  seller          Seller   @relation(fields: [sellerId], references: [id])
+  condition       String
+  manufacture     String
+  warranty        String
+  model           String
+  waterResistance String
+  displayType     String
+  strapMaterial   String
+  movement        String
+  size            String
+  tractionType    String
+  features        String[]
+}
+
+// real estate
+model RealEstate {
+  id        String   @unique @default(uuid())
+  productId String   @unique
+  product   Product  @relation(fields: [productId], references: [id])
+  sellerId  String
+  seller    Seller   @relation(fields: [sellerId], references: [id])
+  beds      String
+  washroom  String
+  size      String
+  text      String[]
+  state     String
+  city      String
+  zip       String
+  address   String
+  feature   String[]
+}
+
+// yachts
+model Yacht {
+  id        String   @unique @default(uuid())
+  productId String   @unique
+  product   Product  @relation(fields: [productId], references: [id])
+  sellerId  String
+  seller    Seller   @relation(fields: [sellerId], references: [id])
+  beds      String
+  washroom  String
+  size      String
+  text      String[]
+  state     String
+  city      String
+  zip       String
+  address   String
+  feature   String[]
+}
+
+// Subscription Plans
+model SubscriptionPlan {
+  id        String               @unique @default(uuid())
+  type      SubscriptionPlanType
+  length    String
+  price     String
+  createdAt DateTime             @default(now())
+  updatedAt DateTime             @updatedAt
+}
+
+model Contact {
+  id        String   @unique @default(uuid())
+  name      String
+  country   String
+  number    String
+  message   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Newsletter {
+  id        String   @unique @default(uuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum UserRole {
+  USER
+  SELLER
+  ADMIN
+}
+
+enum CategoryType {
+  CAR
+  WATCH
+  JEWELLERY
+  REAL_ESTATE
+  YACHT
+}
+
+enum SubscriptionPlanType {
+  BASIC
+  BUSINESS
+  ENTERPRISE
+}
