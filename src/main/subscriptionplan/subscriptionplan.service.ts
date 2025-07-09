@@ -1,15 +1,29 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreateSubscriptionPlanDto } from './dto/create-subscriptionplan.dto';
-import { PrismaService } from '../prisma-service/prisma-service.service';
+import { PrismaService } from 'src/prisma-service/prisma-service.service';
 
 @Injectable()
 export class SubscriptionplanService {
   constructor(private prisma: PrismaService) {}
   async create(createSubscriptionplanDto: CreateSubscriptionPlanDto) {
-    const result = await this.prisma.subscriptionPlan.create({
-      data: createSubscriptionplanDto,
-    });
-    return result;
+    try {
+      // const result = await this.prisma.subscriptionPlan.upsert({
+      //   where: { type: createSubscriptionplanDto.type },
+      //   update: {
+      //     length: createSubscriptionplanDto.length,
+      //     price: createSubscriptionplanDto.price,
+      //   },
+      //   create: {
+      //     ...createSubscriptionplanDto,
+      //   },
+      // });
+      // return result;
+    } catch (error) {
+      console.error('Error creating/upserting SubscriptionPlan:', error);
+      throw new InternalServerErrorException(
+        'Failed to create or update subscription plan.',
+      );
+    }
   }
 
   findAll() {
