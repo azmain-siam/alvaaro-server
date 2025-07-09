@@ -32,11 +32,11 @@ export class CreateUserDto {
   @IsNotEmpty()
   password: string;
 
-  @ApiProperty({
-    example: 'https://imgbb.com/profile/user123.png',
-    description: 'Profile image URL',
-  })
-  @IsString()
+  // @ApiProperty({
+  //   example: 'https://imgbb.com/profile/user123.png',
+  //   description: 'Profile image URL',
+  // })
+  // @IsString()
   image: string;
 
   @ApiProperty({
