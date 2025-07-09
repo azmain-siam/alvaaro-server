@@ -4,10 +4,8 @@ import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
-  create(createUserDto: CreateUserDto, file: Express.Multer.File) {
-    console.log('File received:', file);
-    console.log('Create User DTO:', createUserDto);
-    return 'This action adds a new user';
+  create(createUserDto: CreateUserDto, files: string[]) {
+    return { ...createUserDto, images: files };
   }
 
   findAll() {
@@ -19,6 +17,7 @@ export class UserService {
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
+    console.log('Update User DTO:', updateUserDto);
     return `This action updates a #${id} user`;
   }
 
