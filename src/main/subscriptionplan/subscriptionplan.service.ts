@@ -1,6 +1,7 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateSubscriptionPlanDto } from './dto/create-subscriptionplan.dto';
 import { PrismaService } from 'src/prisma-service/prisma-service.service';
+import { ApiResponse } from 'src/common/apiresponse/apiresponse';
 
 @Injectable()
 export class SubscriptionplanService {
@@ -15,12 +16,12 @@ export class SubscriptionplanService {
         },
       });
 
-      return result;
-    } catch (error) {
-      console.error('Error creating/upserting SubscriptionPlan:', error);
-      throw new InternalServerErrorException(
-        'Failed to create or update subscription plan.',
+      return ApiResponse.success(
+        result,
+        'Subscription plan created successfully.',
       );
+    } catch (error) {
+      return ApiResponse.error('Failed to create subscription plan.', error);
     }
   }
 
