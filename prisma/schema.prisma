@@ -157,7 +157,7 @@ model Yacht {
 // Subscription Plans
 model SubscriptionPlan {
   id        String               @id @default(uuid())
-  type      SubscriptionPlanType
+  type      SubscriptionPlanType @unique
   length    String
   price     String
   createdAt DateTime             @default(now())
