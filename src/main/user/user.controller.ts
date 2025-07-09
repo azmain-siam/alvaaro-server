@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import {
   Controller,
   Get,
@@ -7,23 +10,25 @@ import {
   Param,
   Delete,
   UseInterceptors,
-  UploadedFile,
+  UploadedFiles,
 } from '@nestjs/common';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { ApiConsumes, ApiBody } from '@nestjs/swagger';
+
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiConsumes, ApiBody } from '@nestjs/swagger';
+import { uploadMultipleToCloudinary } from 'src/utils/cloudinary/cloudinary';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FilesInterceptor('files'))
   @ApiConsumes('multipart/form-data')
   @ApiBody({
-    description: 'Create a new user with optional profile image',
+    description: 'Create a new user with optional profile images',
     schema: {
       type: 'object',
       properties: {
@@ -34,23 +39,27 @@ export class UserController {
           type: 'string',
           enum: ['USER', 'SELLER', 'ADMIN'],
         },
-        file: {
-          type: 'string',
-          format: 'binary',
+        files: {
+          type: 'array',
+          items: {
+            type: 'string',
+            format: 'binary',
+          },
         },
       },
     },
   })
-  create(
-    @UploadedFile() file: Express.Multer.File,
+  async create(
+    @UploadedFiles() files: Express.Multer.File[],
     @Body() createUserDto: CreateUserDto,
   ) {
-    // Optionally attach image path
-    if (file) {
-      createUserDto.image = `/uploads/${file.filename}`; // adjust as needed
+    let cloudinaryUrls: string[] = [];
+    if (files && files.length > 0) {
+      const uploadResults = await uploadMultipleToCloudinary(files);
+      cloudinaryUrls = uploadResults.map((res: any) => res.secure_url);
     }
 
-    return this.userService.create(createUserDto, file);
+    return this.userService.create(createUserDto, cloudinaryUrls);
   }
 
   @Get()
