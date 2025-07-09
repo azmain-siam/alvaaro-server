@@ -6,7 +6,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const config = new DocumentBuilder()
-    .setTitle('Nest E-Commerce Server')
+    .setTitle('Alvaaro Server')
     .setDescription('API description')
     .setVersion('1.0')
     .addBearerAuth(

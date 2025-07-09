@@ -4,13 +4,13 @@ services:
     container_name: alvaaroDB
     restart: always
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123456
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
       POSTGRES_DB: alvaroDB
     ports:
       - '5434:5433'
     volumes:
-      - '/Users/Siam/Documents/Projects/alvaro-backend/db_data:/var/lib/postgresql/data'
+      - '/Users/shariar2/Documents/nest/alvaaro-server/db_data:/var/lib/postgresql/data'
 
   adminer:
     image: adminer

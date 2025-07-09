@@ -6,7 +6,7 @@ import {
   IsString,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { UserRole } from '@prisma/client'; // Or define enum manually if needed
+import { UserRole } from '@prisma/client';
 
 export class CreateUserDto {
   @ApiProperty({
