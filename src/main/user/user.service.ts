@@ -4,7 +4,9 @@ import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
-  create(createUserDto: CreateUserDto) {
+  create(createUserDto: CreateUserDto, file: Express.Multer.File) {
+    console.log('File received:', file);
+    console.log('Create User DTO:', createUserDto);
     return 'This action adds a new user';
   }
 
