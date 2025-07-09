@@ -6,9 +6,9 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123456
-      POSTGRES_DB: alvaroDB
+      POSTGRES_DB: alvaarodb
     ports:
-      - '5434:5433'
+      - '5434:5432'
     volumes:
       - '/Users/Siam/Documents/Projects/alvaro-backend/db_data:/var/lib/postgresql/data'
 
