@@ -8,6 +8,14 @@ import { SubscriptionplanModule } from './main/subscriptionplan/subscriptionplan
 import { SellerModule } from './main/seller/seller.module';
 
 @Module({
+  imports: [
+    UserModule,
+    PrismaModule,
+    AuthModule,
+    CarModule,
+    ProductModule,
+    SubscriptionplanModule,
+  ],
   imports: [UserModule, PrismaModule, AuthModule, CarModule, ProductModule, SubscriptionplanModule, SellerModule],
 })
 export class AppModule {}

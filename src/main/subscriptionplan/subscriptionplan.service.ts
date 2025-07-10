@@ -1,26 +1,35 @@
 import { Injectable } from '@nestjs/common';
-import { CreateSubscriptionplanDto } from './dto/create-subscriptionplan.dto';
-import { UpdateSubscriptionplanDto } from './dto/update-subscriptionplan.dto';
+import { CreateSubscriptionPlanDto } from './dto/create-subscriptionplan.dto';
+import { PrismaService } from 'src/prisma-service/prisma-service.service';
+import { ApiResponse } from 'src/utils/common/apiresponse/apiresponse';
 
 @Injectable()
 export class SubscriptionplanService {
-  create(createSubscriptionplanDto: CreateSubscriptionplanDto) {
-    return 'This action adds a new subscriptionplan';
+  constructor(private prisma: PrismaService) {}
+  async create(createSubscriptionplanDto: CreateSubscriptionPlanDto) {
+    try {
+      const result = await this.prisma.subscriptionPlan.upsert({
+        where: { type: createSubscriptionplanDto.type },
+        update: {},
+        create: {
+          ...createSubscriptionplanDto,
+        },
+      });
+
+      return ApiResponse.success(
+        result,
+        'Subscription plan created successfully.',
+      );
+    } catch (error) {
+      return ApiResponse.error('Failed to create subscription plan.', error);
+    }
   }
 
   findAll() {
-    return `This action returns all subscriptionplan`;
+    return this.prisma.subscriptionPlan.findMany();
   }
 
   findOne(id: number) {
     return `This action returns a #${id} subscriptionplan`;
-  }
-
-  update(id: number, updateSubscriptionplanDto: UpdateSubscriptionplanDto) {
-    return `This action updates a #${id} subscriptionplan`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} subscriptionplan`;
   }
 }
