@@ -1,44 +1,72 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { Injectable } from '@nestjs/common';
 import { CreateCarDto } from './dto/create-car.dto';
 import { UpdateCarDto } from './dto/update-car.dto';
 import { PrismaService } from 'src/prisma-service/prisma-service.service';
+import { CategoryType } from '@prisma/client';
+import { ApiResponse } from 'src/utils/common/apiresponse/apiresponse';
 
 @Injectable()
 export class CarService {
   constructor(private prisma: PrismaService) {}
-  create(createCarDto: CreateCarDto, images: string[]) {
-    console.log('Received createCarDto:', createCarDto);
-    console.log('Received images:', images);
-    const productData = {
-      sellerId: '34355f4b-2c3d-4e5f-8a9b-0c1d2e3f4g5h',
-      name: createCarDto.name,
-      description: createCarDto.description,
-      price: createCarDto.price,
-      images,
-      category: createCarDto.category,
-    };
-    console.log('Product data to be created:', productData);
-    // const carData = {
-    //   condition: createCarDto.condition,
-    //   manufacture: createCarDto.manufacture,
-    //   year: createCarDto.year,
-    //   model: createCarDto.model,
-    //   carBodyStyle: createCarDto.carBodyStyle,
-    //   transmission: createCarDto.transmission,
-    //   mileage: createCarDto.mileage,
-    //   cylinders: createCarDto.cylinders,
-    //   tractionType: createCarDto.tractionType,
-    //   fuelType: createCarDto.fuelType,
-    // };
+  async create(createCarDto: CreateCarDto, images: string[]) {
+    try {
+      const { name, description, price, category, ...carData } = createCarDto;
 
-    // const product = await this.prisma.product.create({
-    //   data: productData,
-    // });
-    return 'This action adds a new car';
+      const product = await this.prisma.product.create({
+        data: {
+          sellerId: 'be5b661c-22dc-4fcd-b737-db40b7ffc56d' as string,
+          name,
+          description,
+          price,
+          images,
+          category: category as CategoryType,
+        },
+      });
+      if (product) {
+        const car = await this.prisma.car.create({
+          data: {
+            ...carData,
+            productId: product.id,
+          },
+        });
+        return ApiResponse.success(
+          car,
+          'Car created successfully with product.',
+        );
+      }
+    } catch (error) {
+      console.error('Error creating car with product:', error);
+      return ApiResponse.error('Failed to create car with product.', error);
+    }
   }
 
-  findAll() {
-    return `This action returns all car`;
+  async findAll() {
+    try {
+      const cars = await this.prisma.car.findMany({});
+      const productIds = cars.map((car) => car.productId);
+
+      const products = await this.prisma.product.findMany({
+        where: { id: { in: productIds } },
+      });
+
+      const merged = cars.map((car) => {
+        const product = products.find((p) => p.id === car.productId);
+        return {
+          ...product,
+          ...car,
+        };
+      });
+
+      return ApiResponse.success(
+        merged,
+        'Cars with product info retrieved successfully.',
+      );
+    } catch (error) {
+      console.error('Error retrieving cars:', error);
+      return ApiResponse.error('Failed to retrieve cars.', error);
+    }
   }
 
   findOne(id: number) {
