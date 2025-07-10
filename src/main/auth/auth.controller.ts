@@ -55,7 +55,7 @@ export class AuthController {
 
     const profileImageUrl = cloudinaryUrls[0];
 
-    return this.authService.create(createAuthDto, profileImageUrl);
+    return this.authService.signup(createAuthDto, profileImageUrl);
   }
 
   @Get()
