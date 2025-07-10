@@ -6,7 +6,7 @@ import { PrismaService } from 'src/prisma-service/prisma-service.service';
 @Injectable()
 export class CarService {
   constructor(private prisma: PrismaService) {}
-  async create(createCarDto: CreateCarDto, images: string[]) {
+  create(createCarDto: CreateCarDto, images: string[]) {
     console.log('Received createCarDto:', createCarDto);
     console.log('Received images:', images);
     const productData = {
@@ -17,7 +17,7 @@ export class CarService {
       images,
       category: createCarDto.category,
     };
-
+    console.log('Product data to be created:', productData);
     // const carData = {
     //   condition: createCarDto.condition,
     //   manufacture: createCarDto.manufacture,
@@ -46,6 +46,7 @@ export class CarService {
   }
 
   update(id: number, updateCarDto: UpdateCarDto) {
+    console.log('Updating car with ID:', updateCarDto);
     return `This action updates a #${id} car`;
   }
 
