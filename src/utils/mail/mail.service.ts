@@ -26,9 +26,7 @@ export class MailService {
         from: this.configService.get('EMAIL_FROM'),
         to,
         text: `Hi there,
-
 Thank you for subscribing to Alvaaro's newsletter! 
-
 Best regards,  
 The Alvaaro Team`,
       });
