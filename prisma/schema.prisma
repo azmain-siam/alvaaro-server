@@ -53,16 +53,17 @@ model UserSubscriptions {
 
 model Product {
   id          String       @unique @default(uuid())
-  sellerId    String       @unique
+  sellerId    String
   seller      Seller       @relation(fields: [sellerId], references: [id])
   name        String
   description String
   price       String
   images      String[]
   category    CategoryType
+  trending    Int          @default(0)
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
-  Car         Car?
+  Car         Car[]
   Watch       Watch?
   Jewellery   Jewellery?
   RealEstate  RealEstate?

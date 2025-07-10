@@ -6,14 +6,12 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   UseInterceptors,
   UploadedFiles,
 } from '@nestjs/common';
 import { CarService } from './car.service';
-import { UpdateCarDto } from './dto/update-car.dto';
 import { CreateCarDto } from './dto/create-car.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
@@ -46,16 +44,11 @@ export class CarController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.carService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCarDto: UpdateCarDto) {
-    return this.carService.update(+id, updateCarDto);
+    return this.carService.findOne(id);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.carService.remove(+id);
+    return this.carService.remove(id);
   }
 }

@@ -1,7 +1,7 @@
 // dto/create-product.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
 
-import { IsEnum, IsNotEmpty, IsString, IsUUID } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
 
 export enum CategoryType {
   CAR = 'CAR',
