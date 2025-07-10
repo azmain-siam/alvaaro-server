@@ -1,11 +1,21 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { SubscriptionplanService } from './subscriptionplan.service';
 import { CreateSubscriptionplanDto } from './dto/create-subscriptionplan.dto';
 import { UpdateSubscriptionplanDto } from './dto/update-subscriptionplan.dto';
 
 @Controller('subscriptionplan')
 export class SubscriptionplanController {
-  constructor(private readonly subscriptionplanService: SubscriptionplanService) {}
+  constructor(
+    private readonly subscriptionplanService: SubscriptionplanService,
+  ) {}
 
   @Post()
   create(@Body() createSubscriptionplanDto: CreateSubscriptionplanDto) {
@@ -23,7 +33,10 @@ export class SubscriptionplanController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSubscriptionplanDto: UpdateSubscriptionplanDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateSubscriptionplanDto: UpdateSubscriptionplanDto,
+  ) {
     return this.subscriptionplanService.update(+id, updateSubscriptionplanDto);
   }
 
