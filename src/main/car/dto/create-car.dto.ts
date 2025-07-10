@@ -1,13 +1,9 @@
 // dto/create-car.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsUUID, IsNotEmpty } from 'class-validator';
+import { IsString, IsNotEmpty } from 'class-validator';
 import { CreateProductDto } from 'src/main/product/dto/create-product.dto';
 
 export class CreateCarDto extends CreateProductDto {
-  @ApiProperty()
-  @IsUUID()
-  productId: string;
-
   @ApiProperty()
   @IsString()
   @IsNotEmpty()

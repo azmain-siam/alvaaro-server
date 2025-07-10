@@ -17,8 +17,7 @@ import { SellerModule } from './main/seller/seller.module';
     ProductModule,
     SubscriptionplanModule,
     NewsletterModule,
-    SellerModule
+    SellerModule,
   ],
-
 })
 export class AppModule {}

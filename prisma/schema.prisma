@@ -53,7 +53,7 @@ model UserSubscriptions {
 
 model Product {
   id          String       @unique @default(uuid())
-  sellerId    String
+  sellerId    String       @unique
   seller      Seller       @relation(fields: [sellerId], references: [id])
   name        String
   description String
@@ -176,7 +176,7 @@ model Contact {
 
 model Newsletter {
   id        String   @unique @default(uuid())
-  email     String  @unique
+  email     String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

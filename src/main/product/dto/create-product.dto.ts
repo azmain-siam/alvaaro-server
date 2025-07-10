@@ -1,5 +1,6 @@
 // dto/create-product.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
+
 import { IsEnum, IsNotEmpty, IsString, IsUUID } from 'class-validator';
 
 export enum CategoryType {
@@ -11,10 +12,6 @@ export enum CategoryType {
 }
 
 export class CreateProductDto {
-  @ApiProperty()
-  @IsUUID()
-  sellerId: string;
-
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
