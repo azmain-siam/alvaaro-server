@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateSubscriptionPlanDto } from './dto/create-subscriptionplan.dto';
 import { PrismaService } from 'src/prisma-service/prisma-service.service';
-import { ApiResponse } from 'src/common/apiresponse/apiresponse';
+import { ApiResponse } from 'src/utils/common/apiresponse/apiresponse';
 
 @Injectable()
 export class SubscriptionplanService {
