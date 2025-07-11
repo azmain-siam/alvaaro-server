@@ -23,7 +23,7 @@ model User {
 model Seller {
   id                 String             @unique @default(uuid())
   userId             String             @unique
-  user               User               @relation(fields: [userId], references: [id])
+  user               User               @relation(fields: [userId], references: [id], onDelete: Cascade)
   companyName        String
   companyWebsite     String
   phone              String
@@ -37,7 +37,6 @@ model Seller {
   createdAt          DateTime           @default(now())
   updatedAt          DateTime           @updatedAt
   Product            Product[]
-  Jewellery          Jewellery[]
 }
 
 model UserSubscriptions {
@@ -67,14 +66,14 @@ model Product {
   Watch       Watch?
   RealEstate  RealEstate?
   Yacht       Yacht?
-  jewelleryId String?
+  Jewellery   Jewellery?
 }
 
 // Cars
 model Car {
   id           String  @unique @default(uuid())
   productId    String  @unique
-  product      Product @relation(fields: [productId], references: [id])
+  product      Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   condition    String
   manufacture  String
   year         String
@@ -91,7 +90,7 @@ model Car {
 model Watch {
   id              String   @unique @default(uuid())
   productId       String   @unique
-  product         Product  @relation(fields: [productId], references: [id])
+  product         Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   condition       String
   manufacture     String
   warranty        String
@@ -107,15 +106,9 @@ model Watch {
 
 // Jewelry
 model Jewellery {
-  id              String       @unique @default(uuid())
-  sellerId        String
-  seller          Seller       @relation(fields: [sellerId], references: [id])
-  name            String
-  description     String
-  price           String
-  images          String[]
-  category        CategoryType
-  trending        Int          @default(0)
+  id              String   @unique @default(uuid())
+  productId       String   @unique
+  product         Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   condition       String
   manufacture     String
   warranty        String
@@ -127,15 +120,13 @@ model Jewellery {
   size            String
   tractionType    String
   features        String[]
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
 }
 
 // real estate
 model RealEstate {
   id        String   @unique @default(uuid())
   productId String   @unique
-  product   Product  @relation(fields: [productId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   beds      String
   washroom  String
   size      String

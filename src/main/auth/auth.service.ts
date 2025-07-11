@@ -7,9 +7,12 @@ import { CreateUserDto } from '../user/dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from '../../prisma-service/prisma-service.service';
 import { SignInDto } from './dto/signin.dto';
-import { ApiResponse } from 'src/utils/common/apiresponse/apiresponse';
 import { JwtService } from '@nestjs/jwt';
+<<<<<<< HEAD
 import { PasswordDto } from './dto/passwords.dto';
+=======
+import { ApiResponse } from 'src/utils/common/apiResponse/apiResponse';
+>>>>>>> 44285c96dc22b4f1c571d16cbc1d8c175607c923
 
 @Injectable()
 export class AuthService {
@@ -18,6 +21,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
+<<<<<<< HEAD
 
   async create(createUserDto: CreateUserDto, imageUrl: string) {
 <<<<<<< HEAD
@@ -27,6 +31,9 @@ export class AuthService {
   async signup(createUserDto: CreateUserDto, imageUrl: string) {
 
 >>>>>>> 8ef8621144462ef9e866bdcc6dd68c598eeac8f6
+=======
+  async signup(createUserDto: CreateUserDto, imageUrl: string) {
+>>>>>>> 44285c96dc22b4f1c571d16cbc1d8c175607c923
     try {
       const saltOrRounds = 10;
       const hashedPassword = await bcrypt.hash(
@@ -43,25 +50,15 @@ export class AuthService {
       const result = await this.prisma.user.create({ data });
       return ApiResponse.success(result, 'User Created Successfully');
     } catch (error) {
-      return ApiResponse.error(error, 'User Created Failed!!');
+      return ApiResponse.error('User Created Failed!!', error);
     }
   }
-
 
   async signin(signinDto: SignInDto) {
     try {
       const user = await this.prisma.user.findFirst({
         where: { email: signinDto.email },
       });
-
-  // async signin(loginDto: LoginDto) {
-  //   const {email, password} =
-  // }
-
-  findAll() {
-    return `This action returns all auth`;
-  }
-
 
       if (!user) {
         throw new UnauthorizedException('User account not found');
