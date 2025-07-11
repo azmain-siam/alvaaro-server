@@ -34,6 +34,7 @@ export class CarController {
       const uploadResults = await uploadMultipleToCloudinary(files);
       images = uploadResults.map((res: any) => res.secure_url);
     }
+
     return this.carService.create(createCarDto, images);
   }
 
