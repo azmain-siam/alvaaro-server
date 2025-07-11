@@ -28,8 +28,4 @@ export class SubscriptionplanService {
   findAll() {
     return this.prisma.subscriptionPlan.findMany();
   }
-
-  findOne(id: number) {
-    return `This action returns a #${id} subscriptionplan`;
-  }
 }

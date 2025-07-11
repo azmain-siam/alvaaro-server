@@ -1,56 +1,108 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCarDto } from './dto/create-car.dto';
-import { UpdateCarDto } from './dto/update-car.dto';
 import { PrismaService } from 'src/prisma-service/prisma-service.service';
+import { CategoryType } from '@prisma/client';
+import { ApiResponse } from 'src/utils/common/apiresponse/apiresponse';
 
 @Injectable()
 export class CarService {
   constructor(private prisma: PrismaService) {}
-  create(createCarDto: CreateCarDto, images: string[]) {
-    console.log('Received createCarDto:', createCarDto);
-    console.log('Received images:', images);
-    const productData = {
-      sellerId: '34355f4b-2c3d-4e5f-8a9b-0c1d2e3f4g5h',
-      name: createCarDto.name,
-      description: createCarDto.description,
-      price: createCarDto.price,
-      images,
-      category: createCarDto.category,
-    };
-    console.log('Product data to be created:', productData);
-    // const carData = {
-    //   condition: createCarDto.condition,
-    //   manufacture: createCarDto.manufacture,
-    //   year: createCarDto.year,
-    //   model: createCarDto.model,
-    //   carBodyStyle: createCarDto.carBodyStyle,
-    //   transmission: createCarDto.transmission,
-    //   mileage: createCarDto.mileage,
-    //   cylinders: createCarDto.cylinders,
-    //   tractionType: createCarDto.tractionType,
-    //   fuelType: createCarDto.fuelType,
-    // };
+  async create(createCarDto: CreateCarDto, images: string[]) {
+    try {
+      const result = await this.prisma.$transaction(async (tx) => {
+        const product = await tx.product.create({
+          data: {
+            sellerId: '88b6b5fe-6d9a-45f0-a03b-c5bcb2e6cce3',
+            name: createCarDto.name,
+            description: createCarDto.description,
+            price: createCarDto.price,
+            images,
+            category: createCarDto.category as CategoryType,
+          },
+        });
 
-    // const product = await this.prisma.product.create({
-    //   data: productData,
-    // });
-    return 'This action adds a new car';
+        const car = await tx.car.create({
+          data: {
+            condition: createCarDto.condition,
+            manufacture: createCarDto.manufacture,
+            year: createCarDto.year,
+            model: createCarDto.model,
+            carBodyStyle: createCarDto.carBodyStyle,
+            transmission: createCarDto.transmission,
+            mileage: createCarDto.mileage,
+            cylinders: createCarDto.cylinders,
+            tractionType: createCarDto.tractionType,
+            fuelType: createCarDto.fuelType,
+            productId: product.id,
+          },
+        });
+
+        return { ...product, ...car };
+      });
+
+      return ApiResponse.success(result, 'Car created successfully.');
+    } catch (error) {
+      console.error('Transaction Error:', error);
+      return ApiResponse.error('Failed to create car with transaction.', error);
+    }
   }
 
-  findAll() {
-    return `This action returns all car`;
+  async findAll() {
+    try {
+      const cars = await this.prisma.car.findMany({});
+      const productIds = cars.map((car) => car.productId);
+
+      const products = await this.prisma.product.findMany({
+        where: { id: { in: productIds } },
+        orderBy: { trending: 'desc' },
+      });
+      const carsWithProducts = cars.map((car) => {
+        const product = products.find((p) => p.id === car.productId);
+        return { ...product, ...car };
+      });
+
+      return ApiResponse.success(
+        carsWithProducts,
+        'Cars with product info retrieved successfully.',
+      );
+    } catch (error) {
+      console.error('Error retrieving cars:', error);
+      return ApiResponse.error('Failed to retrieve cars.', error);
+    }
+  }
+  async findOne(id: string) {
+    try {
+      const carDetails = await this.prisma.car.findUniqueOrThrow({
+        where: { id },
+        include: {
+          product: true,
+        },
+      });
+
+      return ApiResponse.success(
+        carDetails,
+        'Car details retrieved successfully.',
+      );
+    } catch (error) {
+      console.error('Error finding car:', error);
+      return ApiResponse.error('Failed to find car.', error);
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} car`;
-  }
-
-  update(id: number, updateCarDto: UpdateCarDto) {
-    console.log('Updating car with ID:', updateCarDto);
-    return `This action updates a #${id} car`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} car`;
+  async remove(id: string) {
+    try {
+      const carDetails = await this.prisma.car.findUnique({ where: { id } });
+      const productId = carDetails?.productId;
+      await this.prisma.car.delete({ where: { id } });
+      if (productId) {
+        const deleteProduct = await this.prisma.product.delete({
+          where: { id: productId },
+        });
+        return ApiResponse.success(deleteProduct, 'Car  deleted successfully.');
+      }
+    } catch (error) {
+      console.error('Error deleting car:', error);
+      return ApiResponse.error('Failed to delete car.', error);
+    }
   }
 }

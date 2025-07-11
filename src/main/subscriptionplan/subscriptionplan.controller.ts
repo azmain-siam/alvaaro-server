@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body } from '@nestjs/common';
 import { CreateSubscriptionPlanDto } from './dto/create-subscriptionplan.dto';
 import { SubscriptionplanService } from './subscriptionplan.service';
 
@@ -15,10 +15,5 @@ export class SubscriptionplanController {
   @Get()
   findAll() {
     return this.subscriptionplanService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.subscriptionplanService.findOne(+id);
   }
 }
