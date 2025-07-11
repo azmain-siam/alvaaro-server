@@ -12,6 +12,7 @@ import { JwelleryModule } from './main/jwellery/jwellery.module';
 
 import { WatchModule } from './main/watch/watch.module';
 import { ContactModule } from './main/contact/contact.module';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
@@ -26,6 +27,9 @@ import { ContactModule } from './main/contact/contact.module';
     JwelleryModule,
     WatchModule,
     ContactModule,
+    CacheModule.register({
+      isGlobal: true,
+    }),
   ],
 })
 export class AppModule {}

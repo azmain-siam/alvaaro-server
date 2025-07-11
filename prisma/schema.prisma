@@ -8,23 +8,22 @@ datasource db {
 }
 
 model User {
-  id            String             @unique @default(uuid())
-  fullName      String
-  email         String             @unique
-  password      String
-  image         String
-  role          UserRole           @default(USER)
-  isDeleted     Boolean            @default(false)
-  Seller        Seller?
-  createdAt     DateTime           @default(now())
-  updatedAt     DateTime           @updatedAt
-  Subscriptions UserSubscriptions?
+  id        String   @unique @default(uuid())
+  fullName  String
+  email     String   @unique
+  password  String
+  image     String
+  role      UserRole @default(USER)
+  isDeleted Boolean  @default(false)
+  Seller    Seller?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Seller {
-  id                 String      @unique @default(uuid())
-  userId             String      @unique
-  user               User        @relation(fields: [userId], references: [id])
+  id                 String             @unique @default(uuid())
+  userId             String             @unique
+  user               User               @relation(fields: [userId], references: [id])
   companyName        String
   companyWebsite     String
   phone              String
@@ -32,24 +31,24 @@ model Seller {
   state              String
   city               String
   zip                String
-  isVerified         Boolean     @default(false)
-  subscriptionStatus Boolean     @default(false)
-  createdAt          DateTime    @default(now())
-  updatedAt          DateTime    @updatedAt
+  isVerified         Boolean            @default(false)
+  subscriptionStatus Boolean            @default(false)
+  Subscriptions      UserSubscriptions?
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
   Product            Product[]
   Jewellery          Jewellery[]
 }
 
 model UserSubscriptions {
-  id             String   @unique @default(uuid())
-  userId         String   @unique
-  user           User     @relation(fields: [userId], references: [id])
-  subscribedPlan String
-  amount         String
-  durationDays   String
-  isActive       Boolean  @default(false)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id             String           @unique @default(uuid())
+  sellerId       String           @unique
+  seller         Seller           @relation(fields: [sellerId], references: [id])
+  subscribedPlan String           @unique
+  subscription   SubscriptionPlan @relation(fields: [subscribedPlan], references: [id])
+  endTime        String
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
 }
 
 model Product {
@@ -166,12 +165,13 @@ model Yacht {
 
 // Subscription Plans
 model SubscriptionPlan {
-  id        String               @id @default(uuid())
-  type      SubscriptionPlanType @unique
-  length    String
-  price     String
-  createdAt DateTime             @default(now())
-  updatedAt DateTime             @updatedAt
+  id                String               @id @default(uuid())
+  type              SubscriptionPlanType @unique
+  length            String
+  price             String
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
+  UserSubscriptions UserSubscriptions?
 }
 
 model Contact {
