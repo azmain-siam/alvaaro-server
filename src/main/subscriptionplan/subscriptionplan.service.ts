@@ -9,7 +9,7 @@ export class SubscriptionplanService {
   async create(createSubscriptionplanDto: CreateSubscriptionPlanDto) {
     try {
       const result = await this.prisma.subscriptionPlan.upsert({
-        where: { type: createSubscriptionplanDto.type },
+        where: { type: createSubscriptionplanDto.type } ,
         update: {},
         create: {
           ...createSubscriptionplanDto,
@@ -27,9 +27,5 @@ export class SubscriptionplanService {
 
   findAll() {
     return this.prisma.subscriptionPlan.findMany();
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} subscriptionplan`;
   }
 }
