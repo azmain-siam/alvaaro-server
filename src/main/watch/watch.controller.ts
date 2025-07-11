@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFiles } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseInterceptors,
+  UploadedFiles,
+} from '@nestjs/common';
 import { WatchService } from './watch.service';
 import { CreateWatchDto } from './dto/create-watch.dto';
 import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -23,11 +33,11 @@ export class WatchController {
     @Body() createWatchDto: CreateWatchDto,
     @UploadedFiles() files: Express.Multer.File[],
   ) {
-       let images: string[] = [];
-        if (files && files.length > 0) {
-          const uploadResults = await uploadMultipleToCloudinary(files);
-          images = uploadResults.map((res: any) => res.secure_url);
-        }
+    let images: string[] = [];
+    if (files && files.length > 0) {
+      const uploadResults = await uploadMultipleToCloudinary(files);
+      images = uploadResults.map((res: any) => res.secure_url);
+    }
     return this.watchService.create(createWatchDto, images);
   }
 

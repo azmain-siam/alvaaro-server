@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, InternalServerErrorException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma-service/prisma-service.service';
 import { CreateWatchDto } from './dto/create-watch.dto';
 import { UpdateWatchDto } from './dto/update-watch.dto';
@@ -11,7 +15,7 @@ export class WatchService {
   async create(createWatchDto: CreateWatchDto, images: string[]) {
     try {
       const productData = {
-        sellerId: '4392d55f-53ab-4be4-984c-8ca8b004fadd',
+        sellerId: '88b6b5fe-6d9a-45f0-a03b-c5bcb2e6cce3',
         name: createWatchDto.name,
         description: createWatchDto.description,
         price: String(createWatchDto.price ?? ''),
@@ -38,8 +42,10 @@ export class WatchService {
         features: Array.isArray(createWatchDto.features)
           ? createWatchDto.features
           : typeof createWatchDto.features === 'string'
-          ? (createWatchDto.features as string).split(',').map(f => f.trim())
-          : [],
+            ? (createWatchDto.features as string)
+                .split(',')
+                .map((f) => f.trim())
+            : [],
       };
 
       const createdWatch = await this.prisma.watch.create({
@@ -103,8 +109,8 @@ export class WatchService {
           features: Array.isArray(updateWatchDto.features)
             ? updateWatchDto.features
             : typeof updateWatchDto.features === 'string'
-            ? updateWatchDto.features.split(',').map(f => f.trim())
-            : [],
+              ? updateWatchDto.features.split(',').map((f) => f.trim())
+              : [],
           product: {
             update: {
               name: updateWatchDto.name,
@@ -140,7 +146,9 @@ export class WatchService {
       }
 
       await this.prisma.watch.delete({ where: { id } });
-      await this.prisma.product.delete({ where: { id: existingWatch.productId } });
+      await this.prisma.product.delete({
+        where: { id: existingWatch.productId },
+      });
 
       return { message: 'Watch and associated product deleted successfully' };
     } catch (error) {
