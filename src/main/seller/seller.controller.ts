@@ -14,15 +14,36 @@ import { CreateSellerDto } from './dto/create-seller.dto';
 import { UpdateSellerDto } from './dto/update-seller.dto';
 import { AuthGuard } from 'src/guards/jwt-auth.guard';
 import { Request } from 'express';
+import { OtpDto } from '../auth/dto/signin.dto';
 
 @UseGuards(AuthGuard)
 @Controller('seller')
 export class SellerController {
   constructor(private readonly sellerService: SellerService) {}
 
+<<<<<<< HEAD
+  @Post('create-seller')
+  sendOtpAndCacheInfo(
+    @Body() createSellerDto: CreateSellerDto,
+    @Req() req: Request,
+  ) {
+    return this.sellerService.sendOtpAndCacheInfo(
+      createSellerDto,
+      req['email'] as string,
+    );
+  }
+  @Post('otp')
+  verifyOtpAndCreate(@Body() otp: OtpDto, @Req() req: Request) {
+    return this.sellerService.verifyOtpAndCreate(
+      otp,
+      req['userid'] as string,
+      req['email'] as string,
+    );
+=======
   @Post()
   create(@Body() createSellerDto: CreateSellerDto, @Req() req: Request) {
     return this.sellerService.create(createSellerDto, req['userid'] as string);
+>>>>>>> 44285c96dc22b4f1c571d16cbc1d8c175607c923
   }
 
   @Get()

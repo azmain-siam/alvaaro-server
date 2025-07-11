@@ -8,7 +8,11 @@ import * as bcrypt from 'bcrypt';
 import { PrismaService } from '../../prisma-service/prisma-service.service';
 import { SignInDto } from './dto/signin.dto';
 import { JwtService } from '@nestjs/jwt';
+<<<<<<< HEAD
+import { PasswordDto } from './dto/passwords.dto';
+=======
 import { ApiResponse } from 'src/utils/common/apiResponse/apiResponse';
+>>>>>>> 44285c96dc22b4f1c571d16cbc1d8c175607c923
 
 @Injectable()
 export class AuthService {
@@ -17,7 +21,19 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
+<<<<<<< HEAD
+
+  async create(createUserDto: CreateUserDto, imageUrl: string) {
+<<<<<<< HEAD
+=======
+
+
   async signup(createUserDto: CreateUserDto, imageUrl: string) {
+
+>>>>>>> 8ef8621144462ef9e866bdcc6dd68c598eeac8f6
+=======
+  async signup(createUserDto: CreateUserDto, imageUrl: string) {
+>>>>>>> 44285c96dc22b4f1c571d16cbc1d8c175607c923
     try {
       const saltOrRounds = 10;
       const hashedPassword = await bcrypt.hash(
@@ -81,5 +97,30 @@ export class AuthService {
         error: message,
       };
     }
+  }
+  async changePassword(id: string, dto: PasswordDto) {
+    const user = await this.prisma.user.findUnique({ where: { id } });
+
+    if (!user) {
+      return ApiResponse.error('User not found');
+    }
+
+    const isOldPasswordCorrect = await bcrypt.compare(
+      dto.oldpassword,
+      user.password,
+    );
+
+    if (!isOldPasswordCorrect) {
+      return ApiResponse.error('Old password is incorrect');
+    }
+
+    const hashedPassword = await bcrypt.hash(dto.newpassword, 10);
+
+    const updatedUser = await this.prisma.user.update({
+      where: { id },
+      data: { password: hashedPassword },
+    });
+
+    return ApiResponse.success(updatedUser, 'Password updated successfully');
   }
 }

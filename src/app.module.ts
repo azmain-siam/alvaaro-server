@@ -10,6 +10,7 @@ import { SellerModule } from './main/seller/seller.module';
 import { JwelleryModule } from './main/jwellery/jwellery.module';
 import { WatchModule } from './main/watch/watch.module';
 import { ContactModule } from './main/contact/contact.module';
+import { CacheModule } from '@nestjs/cache-manager';
 import { RealEstateModule } from './main/real-estate/real-estate.module';
 import { YachtModule } from './main/yacht/yacht.module';
 
@@ -26,6 +27,9 @@ import { YachtModule } from './main/yacht/yacht.module';
     JwelleryModule,
     WatchModule,
     ContactModule,
+    CacheModule.register({
+      isGlobal: true,
+    }),
     RealEstateModule,
     YachtModule,
   ],

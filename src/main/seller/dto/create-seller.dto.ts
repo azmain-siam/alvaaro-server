@@ -2,7 +2,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   IsString,
   IsBoolean,
-  // IsUUID,
   IsOptional,
   IsPhoneNumber,
 } from 'class-validator';
@@ -17,7 +16,7 @@ export class CreateSellerDto {
   companyWebsite: string;
 
   @ApiProperty({ example: '01837588068' })
-  @IsPhoneNumber('BD') // or use IsString() if not validating country code
+  @IsPhoneNumber('BD')
   phone: string;
 
   @ApiProperty({ example: 'House 42, Road 7, Block C' })
@@ -40,4 +39,8 @@ export class CreateSellerDto {
   @IsOptional()
   @IsBoolean()
   subscriptionStatus?: boolean;
+
+  @ApiProperty({ example: '4b28bdea-cd53-4dae-aacb-2545a039012d' })
+  @IsString()
+  subscriptionPlan: string;
 }

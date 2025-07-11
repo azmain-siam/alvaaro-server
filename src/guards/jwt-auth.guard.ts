@@ -27,6 +27,7 @@ export class AuthGuard implements CanActivate {
         secret: 'your_jwt_secret_key',
       });
       request['userid'] = payload.id;
+      request['email'] = payload.email;
     } catch {
       return false;
     }
