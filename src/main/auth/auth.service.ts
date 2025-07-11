@@ -1,18 +1,28 @@
 import {
-  ConflictException,
+  HttpException,
   Injectable,
-  InternalServerErrorException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from '../../prisma-service/prisma-service.service';
-import { Prisma } from '@prisma/client';
+import { SignInDto } from './dto/signin.dto';
+import { ApiResponse } from 'src/utils/common/apiresponse/apiresponse';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly jwtService: JwtService,
+  ) {}
+
+
+  async create(createUserDto: CreateUserDto, imageUrl: string) {
+
 
   async signup(createUserDto: CreateUserDto, imageUrl: string) {
+
     try {
       const saltOrRounds = 10;
       const hashedPassword = await bcrypt.hash(
@@ -26,19 +36,19 @@ export class AuthService {
         image: imageUrl,
       };
 
-      return await this.prisma.user.create({ data });
+      const result = await this.prisma.user.create({ data });
+      return ApiResponse.success(result, 'User Created Successfully');
     } catch (error) {
-      if (
-        error instanceof Prisma.PrismaClientKnownRequestError &&
-        error.code === 'P2002'
-      ) {
-        const fields = (error.meta?.target as string[])?.join(', ') || 'field';
-        throw new ConflictException(`User with this ${fields} already exists.`);
-      }
-
-      throw new InternalServerErrorException('Something went wrong.');
+      return ApiResponse.error(error, 'User Created Failed!!');
     }
   }
+
+
+  async signin(signinDto: SignInDto) {
+    try {
+      const user = await this.prisma.user.findFirst({
+        where: { email: signinDto.email },
+      });
 
   // async signin(loginDto: LoginDto) {
   //   const {email, password} =
@@ -48,15 +58,43 @@ export class AuthService {
     return `This action returns all auth`;
   }
 
-  // findOne(id: number) {
-  //   return `This action returns a #${id} auth`;
-  // }
 
-  // update(id: number, updateAuthDto: UpdateAuthDto) {
-  //   return `This action updates a #${id} auth`;
-  // }
+      if (!user) {
+        throw new UnauthorizedException('User account not found');
+      }
 
-  // remove(id: number) {
-  //   return `This action removes a #${id} auth`;
-  // }
+      if (user.isDeleted) {
+        throw new UnauthorizedException('This account has been deleted');
+      }
+
+      const isPasswordValid = await bcrypt.compare(
+        signinDto.password,
+        user.password,
+      );
+
+      if (!isPasswordValid) {
+        throw new UnauthorizedException('Invalid password');
+      }
+
+      const payload = {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+      };
+
+      const token = await this.jwtService.signAsync(payload);
+
+      return ApiResponse.success({ accessToken: token }, 'Login successful');
+    } catch (error: unknown) {
+      const message =
+        error instanceof HttpException
+          ? error.message
+          : 'Internal server error';
+
+      return {
+        success: false,
+        error: message,
+      };
+    }
+  }
 }

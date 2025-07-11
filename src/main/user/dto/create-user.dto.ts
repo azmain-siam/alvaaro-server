@@ -32,12 +32,13 @@ export class CreateUserDto {
   @IsNotEmpty()
   password: string;
 
-  // @ApiProperty({
-  //   example: 'https://imgbb.com/profile/user123.png',
-  //   description: 'Profile image URL',
-  // })
-  // @IsString()
-  image: string;
+  @ApiProperty({
+    description: 'Photo showing the problem (required)',
+    type: 'array',
+    items: { type: 'file', format: 'binary' },
+    required: true,
+  })
+  images?: Express.Multer.File[];
 
   @ApiProperty({
     example: 'USER',
