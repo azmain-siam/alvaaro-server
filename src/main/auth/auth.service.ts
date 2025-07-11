@@ -8,11 +8,8 @@ import * as bcrypt from 'bcrypt';
 import { PrismaService } from '../../prisma-service/prisma-service.service';
 import { SignInDto } from './dto/signin.dto';
 import { JwtService } from '@nestjs/jwt';
-<<<<<<< HEAD
 import { PasswordDto } from './dto/passwords.dto';
-=======
-import { ApiResponse } from 'src/utils/common/apiResponse/apiResponse';
->>>>>>> 44285c96dc22b4f1c571d16cbc1d8c175607c923
+import { ApiResponse } from 'src/utils/common/apiresponse/apiresponse';
 
 @Injectable()
 export class AuthService {
@@ -21,19 +18,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-<<<<<<< HEAD
-
-  async create(createUserDto: CreateUserDto, imageUrl: string) {
-<<<<<<< HEAD
-=======
-
-
   async signup(createUserDto: CreateUserDto, imageUrl: string) {
-
->>>>>>> 8ef8621144462ef9e866bdcc6dd68c598eeac8f6
-=======
-  async signup(createUserDto: CreateUserDto, imageUrl: string) {
->>>>>>> 44285c96dc22b4f1c571d16cbc1d8c175607c923
     try {
       const saltOrRounds = 10;
       const hashedPassword = await bcrypt.hash(
@@ -50,7 +35,7 @@ export class AuthService {
       const result = await this.prisma.user.create({ data });
       return ApiResponse.success(result, 'User Created Successfully');
     } catch (error) {
-      return ApiResponse.error('User Created Failed!!', error);
+      return ApiResponse.error(error, 'User Created Failed!!');
     }
   }
 

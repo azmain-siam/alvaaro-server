@@ -21,7 +21,6 @@ import { OtpDto } from '../auth/dto/signin.dto';
 export class SellerController {
   constructor(private readonly sellerService: SellerService) {}
 
-<<<<<<< HEAD
   @Post('create-seller')
   sendOtpAndCacheInfo(
     @Body() createSellerDto: CreateSellerDto,
@@ -39,11 +38,6 @@ export class SellerController {
       req['userid'] as string,
       req['email'] as string,
     );
-=======
-  @Post()
-  create(@Body() createSellerDto: CreateSellerDto, @Req() req: Request) {
-    return this.sellerService.create(createSellerDto, req['userid'] as string);
->>>>>>> 44285c96dc22b4f1c571d16cbc1d8c175607c923
   }
 
   @Get()
