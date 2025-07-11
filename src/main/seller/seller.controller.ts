@@ -26,7 +26,7 @@ export class SellerController {
     return this.sellerService.create(createSellerDto, req['userid'] as string);
 
   create(@Body() createSellerDto: CreateSellerDto) {
-    const userId = '5c5e6159-3c0b-4596-bda9-f87726f28a32';
+    const userId = '860ffa2d-c861-4f21-9356-c74cc41e7559';
 
     return this.sellerService.create(createSellerDto, userId);
 

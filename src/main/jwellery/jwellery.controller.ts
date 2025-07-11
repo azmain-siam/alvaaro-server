@@ -34,7 +34,7 @@ export class JwelleryController {
       const uploadResults = await uploadMultipleToCloudinary(files);
       images = uploadResults.map((res: any) => res.secure_url);
     }
-    const sellerId = '88b6b5fe-6d9a-45f0-a03b-c5bcb2e6cce3';
+    const sellerId = '67f689cb-f13a-457c-be55-5a9b9df49b08';
     return this.jwelleryService.create(createCarDto, images, sellerId);
   }
   @Get()

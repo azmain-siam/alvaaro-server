@@ -16,6 +16,7 @@ import { JwelleryModule } from './main/jwellery/jwellery.module';
 
 import { WatchModule } from './main/watch/watch.module';
 import { ContactModule } from './main/contact/contact.module';
+import { RealEstateModule } from './main/real-estate/real-estate.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { ContactModule } from './main/contact/contact.module';
     JwelleryModule,
     WatchModule,
     ContactModule,
+    RealEstateModule,
   ],
 })
 export class AppModule {}
