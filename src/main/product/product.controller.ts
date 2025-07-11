@@ -8,26 +8,23 @@ import {
   UploadedFiles,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
-import { CreateProductDto } from './dto/create-product.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 // import { CreateProductWithFilesDto } from './dto/create-product-with-files.dto';
 import { uploadMultipleToCloudinary } from 'src/utils/cloudinary/cloudinary';
+import { CreateRealEstateDto } from '../real-estate/dto/create-real-estate.dto';
 
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
-  @Post()
+  @Post('real-estate')
   @UseInterceptors(FilesInterceptor('images'))
   @ApiConsumes('multipart/form-data')
-  @ApiBody({
-    description: 'Product creation with images',
-    type: CreateProductDto,
-  })
+  @ApiBody({ type: CreateRealEstateDto })
   async create(
     @UploadedFiles() images: Express.Multer.File[],
-    @Body() createProductDto: CreateProductDto,
+    @Body() createProductDto: CreateRealEstateDto,
   ) {
     const cloudinaryUrls =
       images?.length > 0
@@ -35,8 +32,8 @@ export class ProductController {
             (res: { secure_url: string }) => res.secure_url,
           )
         : [];
-    const sellerId = '67f689cb-f13a-457c-be55-5a9b9df49b08';
-    return this.productService.create(
+    const sellerId = 'efcbe1d7-75b3-4ee2-a1b8-41152506d1a4';
+    return this.productService.createRealEstateProduct(
       createProductDto,
       cloudinaryUrls,
       sellerId,

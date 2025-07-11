@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { CategoryType } from '@prisma/client';
-import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import { CreateRealEstateDto } from 'src/main/real-estate/dto/create-real-estate.dto';
+import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateProductDto {
   @ApiProperty()
@@ -30,7 +29,7 @@ export class CreateProductDto {
   @IsEnum(CategoryType)
   category: CategoryType;
 
-  @ApiProperty({ required: false })
-  @IsOptional()
-  realEstateDetails?: CreateRealEstateDto;
+  // @ApiProperty({ required: false })
+  // @IsOptional()
+  // realEstateDetails?: CreateRealEstateDto;
 }

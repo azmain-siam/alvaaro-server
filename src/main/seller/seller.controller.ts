@@ -21,15 +21,8 @@ export class SellerController {
   constructor(private readonly sellerService: SellerService) {}
 
   @Post()
-
   create(@Body() createSellerDto: CreateSellerDto, @Req() req: Request) {
     return this.sellerService.create(createSellerDto, req['userid'] as string);
-
-  create(@Body() createSellerDto: CreateSellerDto) {
-    const userId = '860ffa2d-c861-4f21-9356-c74cc41e7559';
-
-    return this.sellerService.create(createSellerDto, userId);
-
   }
 
   @Get()
