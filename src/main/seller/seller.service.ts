@@ -99,6 +99,7 @@ export class SellerService {
     return `This action returns a #${id} seller`;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   update(id: number, updateSellerDto: UpdateSellerDto) {
     return `This action updates a #${id} seller`;
   }

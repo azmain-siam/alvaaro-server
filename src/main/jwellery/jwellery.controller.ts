@@ -11,7 +11,7 @@ import {
   UseInterceptors,
   UploadedFiles,
 } from '@nestjs/common';
-import { JwelleryService } from './jwellery.service';
+import { JewelleryService } from './jwellery.service';
 import { CreateJewelleryDto } from './dto/create-jwellery.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
@@ -19,7 +19,7 @@ import { uploadMultipleToCloudinary } from 'src/utils/cloudinary/cloudinary';
 
 @Controller('jwellery')
 export class JwelleryController {
-  constructor(private readonly jwelleryService: JwelleryService) {}
+  constructor(private readonly jwelleryService: JewelleryService) {}
 
   @Post()
   @UseInterceptors(FilesInterceptor('images'))
