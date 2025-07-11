@@ -1,36 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { CreateJewelleryDto } from './dto/create-jwellery.dto';
 import { PrismaService } from 'src/prisma-service/prisma-service.service';
-import { ApiResponse } from 'src/utils/common/apiResponse/apiResponse';
+import { ApiResponse } from 'src/utils/common/apiresponse/apiresponse';
 
 @Injectable()
 export class JewelleryService {
   constructor(private readonly prisma: PrismaService) {}
-  async create(
-    createJewelleryDto: CreateJewelleryDto,
-    images: string[],
-    sellerId: string,
-  ) {
-    try {
-      const featuresString = createJewelleryDto.features;
-      const featuresArray: string[] = featuresString
-        .split(',')
-        .map((item) => item.trim());
-
-      const result = await this.prisma.jewellery.create({
-        data: {
-          ...createJewelleryDto,
-          features: featuresArray,
-          sellerId,
-          images,
-        },
-      });
-
-      return ApiResponse.success(result, 'Jewellery Created Successfully');
-    } catch (error) {
-      return ApiResponse.error('Jewellery Created failed', error);
-    }
-  }
 
   async findAll() {
     try {

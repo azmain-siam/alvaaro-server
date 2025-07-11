@@ -9,7 +9,7 @@ import {
   isWatchDto,
   isYachtDto,
 } from './guards';
-import { ApiResponse } from 'src/utils/common/apiResponse/apiResponse';
+import { ApiResponse } from 'src/utils/common/apiresponse/apiresponse';
 
 @Injectable()
 export class ProductService {

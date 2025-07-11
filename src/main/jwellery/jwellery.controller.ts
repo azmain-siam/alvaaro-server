@@ -21,22 +21,6 @@ import { uploadMultipleToCloudinary } from 'src/utils/cloudinary/cloudinary';
 export class JwelleryController {
   constructor(private readonly jwelleryService: JewelleryService) {}
 
-  @Post()
-  @UseInterceptors(FilesInterceptor('images'))
-  @ApiConsumes('multipart/form-data')
-  @ApiBody({ type: CreateJewelleryDto })
-  async create(
-    @UploadedFiles() files: Express.Multer.File[],
-    @Body() createCarDto: CreateJewelleryDto,
-  ) {
-    let images: string[] = [];
-    if (files && files.length > 0) {
-      const uploadResults = await uploadMultipleToCloudinary(files);
-      images = uploadResults.map((res: any) => res.secure_url);
-    }
-    const sellerId = '67f689cb-f13a-457c-be55-5a9b9df49b08';
-    return this.jwelleryService.create(createCarDto, images, sellerId);
-  }
   @Get()
   findAll() {
     return this.jwelleryService.findAll();
