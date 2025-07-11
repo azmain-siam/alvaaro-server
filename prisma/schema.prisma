@@ -46,7 +46,7 @@ model UserSubscriptions {
   seller         Seller           @relation(fields: [sellerId], references: [id])
   subscribedPlan String           @unique
   subscription   SubscriptionPlan @relation(fields: [subscribedPlan], references: [id])
-  endTime        String
+  expiryTime     String
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
 }
