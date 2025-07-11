@@ -6,14 +6,38 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const config = new DocumentBuilder()
-    .setTitle('Alvaaro API')
-    .setDescription('API documentation for Contact model')
+    .setTitle('Alvaaro Server')
+    .setDescription('API description')
     .setVersion('1.0')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        in: 'bearer',
+      },
+      'access-token',
+    )
     .build();
 
-    const document = SwaggerModule.createDocument(app, config);
-    SwaggerModule.setup('api', app , document)
+  const documentFactory = SwaggerModule.createDocument(app, config);
 
+  documentFactory.paths = Object.fromEntries(
+    Object.entries(documentFactory.paths).map(([path, ops]) => [
+      path,
+      Object.fromEntries(
+        Object.entries(ops).map(([method, op]) => [
+          method,
+          {
+            ...op,
+            security: [{ 'access-token': [] }],
+          },
+        ]),
+      ),
+    ]),
+  );
+
+  SwaggerModule.setup('api', app, documentFactory);
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

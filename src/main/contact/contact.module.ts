@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ContactService } from './contact.service';
 import { ContactController } from './contact.controller';
-import { PrismaServiceModule } from '../prisma-service/prisma-service.module';
+import { PrismaModule } from 'src/prisma-service/prisma-service.module';
 
 @Module({
-  imports: [PrismaServiceModule],
+  imports: [PrismaModule],
   controllers: [ContactController],
   providers: [ContactService],
 })
