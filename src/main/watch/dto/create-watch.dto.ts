@@ -1,13 +1,8 @@
-import {
-  IsString,
-  IsArray,
-  IsNotEmpty,
-  IsUUID,
-} from 'class-validator';
+import { IsString, IsArray, IsNotEmpty, IsUUID } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { CreateProductDto } from 'src/main/product/dto/create-product.dto';
 
-export class CreateWatchDto extends CreateProductDto{
+export class CreateWatchDto extends CreateProductDto {
   @ApiProperty({
     description: 'The UUID of the associated product',
     example: 'd290f1ee-6c54-4b01-90e6-d701748f0851',
@@ -105,4 +100,3 @@ export class CreateWatchDto extends CreateProductDto{
   @IsString({ each: true })
   features: string[];
 }
-

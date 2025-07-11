@@ -7,16 +7,11 @@ import { ProductModule } from './main/product/product.module';
 import { SubscriptionplanModule } from './main/subscriptionplan/subscriptionplan.module';
 import { NewsletterModule } from './main/newsletter/newsletter.module';
 import { SellerModule } from './main/seller/seller.module';
-
-
 import { JwelleryModule } from './main/jwellery/jwellery.module';
-
-
-import { JwelleryModule } from './main/jwellery/jwellery.module';
-
 import { WatchModule } from './main/watch/watch.module';
 import { ContactModule } from './main/contact/contact.module';
 import { RealEstateModule } from './main/real-estate/real-estate.module';
+import { YachtModule } from './main/yacht/yacht.module';
 
 @Module({
   imports: [
@@ -32,6 +27,7 @@ import { RealEstateModule } from './main/real-estate/real-estate.module';
     WatchModule,
     ContactModule,
     RealEstateModule,
+    YachtModule,
   ],
 })
 export class AppModule {}

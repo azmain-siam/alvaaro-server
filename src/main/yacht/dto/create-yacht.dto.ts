@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsString } from 'class-validator';
 import { CreateProductDto } from 'src/main/product/dto/create-product.dto';
 
-export class CreateRealEstateDto extends CreateProductDto {
+export class CreateYachtDto extends CreateProductDto {
   @ApiProperty() @IsString() beds: string;
   @ApiProperty() @IsString() washroom: string;
   @ApiProperty() @IsString() size: string;

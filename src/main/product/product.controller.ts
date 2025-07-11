@@ -8,37 +8,94 @@ import {
   UploadedFiles,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
-import { CreateProductDto } from './dto/create-product.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
-// import { CreateProductWithFilesDto } from './dto/create-product-with-files.dto';
-import { uploadMultipleToCloudinary } from 'src/utils/cloudinary/cloudinary';
+import { CreateRealEstateDto } from '../real-estate/dto/create-real-estate.dto';
+import { CreateCarDto } from '../car/dto/create-car.dto';
+import { CreateWatchDto } from '../watch/dto/create-watch.dto';
+import { CreateYachtDto } from '../yacht/dto/create-yacht.dto';
+import { CreateJewelleryDto } from '../jwellery/dto/create-jwellery.dto';
 
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
-  @Post()
+  @Post('real-estate')
   @UseInterceptors(FilesInterceptor('images'))
   @ApiConsumes('multipart/form-data')
-  @ApiBody({
-    description: 'Product creation with images',
-    type: CreateProductDto,
-  })
-  async create(
+  @ApiBody({ type: CreateRealEstateDto })
+  async createRealEstateProduct(
     @UploadedFiles() images: Express.Multer.File[],
-    @Body() createProductDto: CreateProductDto,
+    @Body() createProductDto: CreateRealEstateDto,
   ) {
-    const cloudinaryUrls =
-      images?.length > 0
-        ? (await uploadMultipleToCloudinary(images)).map(
-            (res: { secure_url: string }) => res.secure_url,
-          )
-        : [];
-    const sellerId = '67f689cb-f13a-457c-be55-5a9b9df49b08';
-    return this.productService.create(
+    const sellerId = 'efcbe1d7-75b3-4ee2-a1b8-41152506d1a4';
+    return this.productService.handleProductCreation(
       createProductDto,
-      cloudinaryUrls,
+      images,
+      sellerId,
+    );
+  }
+
+  @Post('car')
+  @UseInterceptors(FilesInterceptor('images'))
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({ type: CreateCarDto })
+  async createCarProduct(
+    @UploadedFiles() images: Express.Multer.File[],
+    @Body() createProductDto: CreateCarDto,
+  ) {
+    const sellerId = 'efcbe1d7-75b3-4ee2-a1b8-41152506d1a4';
+    return this.productService.handleProductCreation(
+      createProductDto,
+      images,
+      sellerId,
+    );
+  }
+
+  @Post('watch')
+  @UseInterceptors(FilesInterceptor('images'))
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({ type: CreateWatchDto })
+  async createWatchProduct(
+    @UploadedFiles() images: Express.Multer.File[],
+    @Body() createProductDto: CreateWatchDto,
+  ) {
+    const sellerId = 'efcbe1d7-75b3-4ee2-a1b8-41152506d1a4';
+    return this.productService.handleProductCreation(
+      createProductDto,
+      images,
+      sellerId,
+    );
+  }
+
+  @Post('yacht')
+  @UseInterceptors(FilesInterceptor('images'))
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({ type: CreateYachtDto })
+  async createYachtProduct(
+    @UploadedFiles() images: Express.Multer.File[],
+    @Body() createProductDto: CreateYachtDto,
+  ) {
+    const sellerId = 'efcbe1d7-75b3-4ee2-a1b8-41152506d1a4';
+    return this.productService.handleProductCreation(
+      createProductDto,
+      images,
+      sellerId,
+    );
+  }
+
+  @Post('jewellery')
+  @UseInterceptors(FilesInterceptor('images'))
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({ type: CreateJewelleryDto })
+  async createJewelleryProduct(
+    @UploadedFiles() images: Express.Multer.File[],
+    @Body() createProductDto: CreateJewelleryDto,
+  ) {
+    const sellerId = 'efcbe1d7-75b3-4ee2-a1b8-41152506d1a4';
+    return this.productService.handleProductCreation(
+      createProductDto,
+      images,
       sellerId,
     );
   }
