@@ -17,8 +17,12 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
+
   async create(createUserDto: CreateUserDto, imageUrl: string) {
-    console.log(createUserDto, imageUrl);
+
+
+  async signup(createUserDto: CreateUserDto, imageUrl: string) {
+
     try {
       const saltOrRounds = 10;
       const hashedPassword = await bcrypt.hash(
@@ -39,11 +43,21 @@ export class AuthService {
     }
   }
 
+
   async signin(signinDto: SignInDto) {
     try {
       const user = await this.prisma.user.findFirst({
         where: { email: signinDto.email },
       });
+
+  // async signin(loginDto: LoginDto) {
+  //   const {email, password} =
+  // }
+
+  findAll() {
+    return `This action returns all auth`;
+  }
+
 
       if (!user) {
         throw new UnauthorizedException('User account not found');

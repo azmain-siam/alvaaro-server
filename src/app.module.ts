@@ -8,6 +8,10 @@ import { SubscriptionplanModule } from './main/subscriptionplan/subscriptionplan
 import { NewsletterModule } from './main/newsletter/newsletter.module';
 import { SellerModule } from './main/seller/seller.module';
 
+
+import { JwelleryModule } from './main/jwellery/jwellery.module';
+
+
 import { JwelleryModule } from './main/jwellery/jwellery.module';
 
 import { WatchModule } from './main/watch/watch.module';
