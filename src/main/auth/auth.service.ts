@@ -12,7 +12,7 @@ import { Prisma } from '@prisma/client';
 export class AuthService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(createUserDto: CreateUserDto, imageUrl: string) {
+  async signup(createUserDto: CreateUserDto, imageUrl: string) {
     try {
       const saltOrRounds = 10;
       const hashedPassword = await bcrypt.hash(
@@ -39,6 +39,10 @@ export class AuthService {
       throw new InternalServerErrorException('Something went wrong.');
     }
   }
+
+  // async signin(loginDto: LoginDto) {
+  //   const {email, password} =
+  // }
 
   findAll() {
     return `This action returns all auth`;
