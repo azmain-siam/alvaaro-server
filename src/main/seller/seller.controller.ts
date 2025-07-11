@@ -17,7 +17,7 @@ export class SellerController {
 
   @Post()
   create(@Body() createSellerDto: CreateSellerDto) {
-    const userId = '75a686d3-8f75-4ba8-a21d-22520a18a353';
+    const userId = 'e8d197d9-82e7-4451-bf3f-49005a71ee2f';
     return this.sellerService.create(createSellerDto, userId);
   }
 
