@@ -24,7 +24,7 @@ model User {
 model Seller {
   id                 String      @unique @default(uuid())
   userId             String      @unique
-  user               User        @relation(fields: [userId], references: [id])
+  user               User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   companyName        String
   companyWebsite     String
   phone              String
@@ -75,7 +75,7 @@ model Product {
 model Car {
   id           String  @unique @default(uuid())
   productId    String  @unique
-  product      Product @relation(fields: [productId], references: [id])
+  product      Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   condition    String
   manufacture  String
   year         String
@@ -92,7 +92,7 @@ model Car {
 model Watch {
   id              String   @unique @default(uuid())
   productId       String   @unique
-  product         Product  @relation(fields: [productId], references: [id])
+  product         Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   condition       String
   manufacture     String
   warranty        String
@@ -110,7 +110,7 @@ model Watch {
 model Jewellery {
   id              String       @unique @default(uuid())
   sellerId        String
-  seller          Seller       @relation(fields: [sellerId], references: [id])
+  seller          Seller       @relation(fields: [sellerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   name            String
   description     String
   price           String
@@ -136,7 +136,7 @@ model Jewellery {
 model RealEstate {
   id        String   @unique @default(uuid())
   productId String   @unique
-  product   Product  @relation(fields: [productId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   beds      String
   washroom  String
   size      String

@@ -1,15 +1,7 @@
-// dto/create-product.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
-
-import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
-
-export enum CategoryType {
-  CAR = 'CAR',
-  WATCH = 'WATCH',
-  JEWELLERY = 'JEWELLERY',
-  REALESTATE = 'REALESTATE',
-  YACHT = 'YACHT',
-}
+import { CategoryType } from '@prisma/client';
+import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { CreateRealEstateDto } from 'src/main/real-estate/dto/create-real-estate.dto';
 
 export class CreateProductDto {
   @ApiProperty()
@@ -26,14 +18,19 @@ export class CreateProductDto {
   price: string;
 
   @ApiProperty({
-    description: 'Photo showing the problem (required)',
     type: 'array',
-    items: { type: 'file', format: 'binary' },
-    required: true,
+    items: {
+      type: 'file',
+      format: 'binary',
+    },
   })
   images?: Express.Multer.File[];
 
   @ApiProperty({ enum: CategoryType })
   @IsEnum(CategoryType)
   category: CategoryType;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  realEstateDetails?: CreateRealEstateDto;
 }
