@@ -121,6 +121,31 @@ export class ProductService {
     return ApiResponse.success(product, 'Product created successfully');
   }
 
+  async findAllProducts() {
+    const products = await this.prisma.product.findMany({
+      include: {
+        seller: {
+          select: {
+            id: true,
+            phone: true,
+            address: true,
+            companyName: true,
+            companyWebsite: true,
+          },
+        },
+        // RealEstate: true,
+        // Car: true,
+        // Yacht: true,
+        // Watch: true,
+        // Jewellery: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+    return ApiResponse.success(products, 'Products fetched successfully');
+  }
+
   async update(id: string) {
     return await this.prisma.product.update({
       where: { id },

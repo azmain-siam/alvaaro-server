@@ -6,6 +6,7 @@ import {
   Body,
   UseInterceptors,
   UploadedFiles,
+  Get,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { FilesInterceptor } from '@nestjs/platform-express';
@@ -28,7 +29,7 @@ export class ProductController {
     @UploadedFiles() images: Express.Multer.File[],
     @Body() createProductDto: CreateRealEstateDto,
   ) {
-    const sellerId = 'efcbe1d7-75b3-4ee2-a1b8-41152506d1a4';
+    const sellerId = 'c5407532-a6e1-41eb-9880-e91d926e2cb5';
     return this.productService.handleProductCreation(
       createProductDto,
       images,
@@ -44,7 +45,7 @@ export class ProductController {
     @UploadedFiles() images: Express.Multer.File[],
     @Body() createProductDto: CreateCarDto,
   ) {
-    const sellerId = 'efcbe1d7-75b3-4ee2-a1b8-41152506d1a4';
+    const sellerId = 'c5407532-a6e1-41eb-9880-e91d926e2cb5';
     return this.productService.handleProductCreation(
       createProductDto,
       images,
@@ -60,7 +61,7 @@ export class ProductController {
     @UploadedFiles() images: Express.Multer.File[],
     @Body() createProductDto: CreateWatchDto,
   ) {
-    const sellerId = 'efcbe1d7-75b3-4ee2-a1b8-41152506d1a4';
+    const sellerId = 'c5407532-a6e1-41eb-9880-e91d926e2cb5';
     return this.productService.handleProductCreation(
       createProductDto,
       images,
@@ -76,7 +77,7 @@ export class ProductController {
     @UploadedFiles() images: Express.Multer.File[],
     @Body() createProductDto: CreateYachtDto,
   ) {
-    const sellerId = 'efcbe1d7-75b3-4ee2-a1b8-41152506d1a4';
+    const sellerId = 'c5407532-a6e1-41eb-9880-e91d926e2cb5';
     return this.productService.handleProductCreation(
       createProductDto,
       images,
@@ -92,12 +93,17 @@ export class ProductController {
     @UploadedFiles() images: Express.Multer.File[],
     @Body() createProductDto: CreateJewelleryDto,
   ) {
-    const sellerId = 'efcbe1d7-75b3-4ee2-a1b8-41152506d1a4';
+    const sellerId = 'c5407532-a6e1-41eb-9880-e91d926e2cb5';
     return this.productService.handleProductCreation(
       createProductDto,
       images,
       sellerId,
     );
+  }
+
+  @Get()
+  findAllProducts() {
+    return this.productService.findAllProducts();
   }
 
   @Patch('trending/:id')
