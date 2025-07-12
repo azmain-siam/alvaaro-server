@@ -7,15 +7,17 @@ import {
   UseInterceptors,
   UploadedFiles,
   Get,
+  Query,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { ApiBody, ApiConsumes } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiQuery } from '@nestjs/swagger';
 import { CreateRealEstateDto } from '../real-estate/dto/create-real-estate.dto';
 import { CreateCarDto } from '../car/dto/create-car.dto';
 import { CreateWatchDto } from '../watch/dto/create-watch.dto';
 import { CreateYachtDto } from '../yacht/dto/create-yacht.dto';
 import { CreateJewelleryDto } from '../jwellery/dto/create-jwellery.dto';
+import { CategoryType } from '@prisma/client';
 
 @Controller('product')
 export class ProductController {
@@ -102,8 +104,14 @@ export class ProductController {
   }
 
   @Get()
-  findAllProducts() {
-    return this.productService.findAllProducts();
+  @ApiQuery({ name: 'category', enum: CategoryType, required: false })
+  async findAllProducts(@Query('category') category?: CategoryType) {
+    return this.productService.findAllProducts(category);
+  }
+
+  @Get('/seller/:sellerId')
+  findProductBySellerId(@Param('sellerId') sellerId: string) {
+    return this.productService.findProductBySellerId(sellerId);
   }
 
   @Patch('trending/:id')
