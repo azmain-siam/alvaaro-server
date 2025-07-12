@@ -10,6 +10,7 @@ import {
   isYachtDto,
 } from './guards';
 import { ApiResponse } from 'src/utils/common/apiresponse/apiresponse';
+import { CategoryType } from '@prisma/client';
 
 @Injectable()
 export class ProductService {
@@ -121,8 +122,9 @@ export class ProductService {
     return ApiResponse.success(product, 'Product created successfully');
   }
 
-  async findAllProducts() {
+  async findAllProducts(category?: CategoryType) {
     const products = await this.prisma.product.findMany({
+      where: category ? { category } : {},
       include: {
         seller: {
           select: {
@@ -138,6 +140,27 @@ export class ProductService {
         // Yacht: true,
         // Watch: true,
         // Jewellery: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+    return ApiResponse.success(products, 'Products fetched successfully');
+  }
+
+  async findProductBySellerId(sellerId: string) {
+    const products = await this.prisma.product.findMany({
+      where: { sellerId },
+      include: {
+        seller: {
+          select: {
+            id: true,
+            phone: true,
+            address: true,
+            companyName: true,
+            companyWebsite: true,
+          },
+        },
       },
       orderBy: {
         createdAt: 'desc',
