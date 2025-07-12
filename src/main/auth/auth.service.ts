@@ -35,7 +35,7 @@ export class AuthService {
       const result = await this.prisma.user.create({ data });
       return ApiResponse.success(result, 'User Created Successfully');
     } catch (error) {
-      return ApiResponse.error('User Created Failed!!', error);
+      return ApiResponse.error(error, 'User Created Failed!!');
     }
   }
 
