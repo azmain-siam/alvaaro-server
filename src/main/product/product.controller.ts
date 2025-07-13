@@ -28,7 +28,7 @@ export class ProductController {
     @UploadedFiles() images: Express.Multer.File[],
     @Body() createProductDto: CreateRealEstateDto,
   ) {
-    const sellerId = 'efcbe1d7-75b3-4ee2-a1b8-41152506d1a4';
+    const sellerId = '36c77915-cd87-486d-af89-90b94bf9b453';
     return this.productService.handleProductCreation(
       createProductDto,
       images,
@@ -44,7 +44,7 @@ export class ProductController {
     @UploadedFiles() images: Express.Multer.File[],
     @Body() createProductDto: CreateCarDto,
   ) {
-    const sellerId = 'efcbe1d7-75b3-4ee2-a1b8-41152506d1a4';
+    const sellerId = '36c77915-cd87-486d-af89-90b94bf9b453';
     return this.productService.handleProductCreation(
       createProductDto,
       images,
@@ -60,7 +60,7 @@ export class ProductController {
     @UploadedFiles() images: Express.Multer.File[],
     @Body() createProductDto: CreateWatchDto,
   ) {
-    const sellerId = 'efcbe1d7-75b3-4ee2-a1b8-41152506d1a4';
+    const sellerId = '36c77915-cd87-486d-af89-90b94bf9b453';
     return this.productService.handleProductCreation(
       createProductDto,
       images,
@@ -76,7 +76,7 @@ export class ProductController {
     @UploadedFiles() images: Express.Multer.File[],
     @Body() createProductDto: CreateYachtDto,
   ) {
-    const sellerId = 'efcbe1d7-75b3-4ee2-a1b8-41152506d1a4';
+    const sellerId = '36c77915-cd87-486d-af89-90b94bf9b453';
     return this.productService.handleProductCreation(
       createProductDto,
       images,
@@ -92,7 +92,7 @@ export class ProductController {
     @UploadedFiles() images: Express.Multer.File[],
     @Body() createProductDto: CreateJewelleryDto,
   ) {
-    const sellerId = 'efcbe1d7-75b3-4ee2-a1b8-41152506d1a4';
+    const sellerId = '36c77915-cd87-486d-af89-90b94bf9b453';
     return this.productService.handleProductCreation(
       createProductDto,
       images,

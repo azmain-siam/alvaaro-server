@@ -49,13 +49,13 @@ export class SellerService {
       return ApiResponse.error('Otp has been expired');
     }
 
-    const subscriptionPlanDetails =
-      await this.prisma.subscriptionPlan.findUnique({
-        where: { id: userInfo.subscriptionPlan },
-      });
-    if (!subscriptionPlanDetails) {
-      ApiResponse.error('Your Choosing subscription has been deleted');
-    }
+    // const subscriptionPlanDetails =
+    //   await this.prisma.subscriptionPlan.findUnique({
+    //     where: { id: userInfo.subscriptionPlan },
+    //   });
+    // if (!subscriptionPlanDetails) {
+    //   ApiResponse.error('Your Choosing subscription has been deleted');
+    // }
 
     const result = await this.prisma.seller.upsert({
       where: { userId },
@@ -65,31 +65,31 @@ export class SellerService {
         ...userInfo,
       },
     });
-    if (!result) {
-      ApiResponse.error('Failed to create seller Account');
-    }
+    // if (!result) {
+    //   ApiResponse.error('Failed to create seller Account');
+    // }
 
-    if (!subscriptionPlanDetails?.length) {
-      throw new Error('Invalid month length format.');
-    }
-    const now = new Date();
-    const endTime = new Date(now);
-    const monthLengthStr = parseInt(subscriptionPlanDetails?.length);
-    const endTimes = endTime.setMonth(endTime.getMonth() + monthLengthStr);
-    endTime.toISOString();
+    // if (!subscriptionPlanDetails?.length) {
+    //   throw new Error('Invalid month length format.');
+    // }
+    // const now = new Date();
+    // const endTime = new Date(now);
+    // const monthLengthStr = parseInt(subscriptionPlanDetails?.length);
+    // const endTimes = endTime.setMonth(endTime.getMonth() + monthLengthStr);
+    // endTime.toISOString();
 
-    const userSubscriptionPayload = {
-      sellerId: result?.id,
-      subscribedPlan: subscriptionPlanDetails?.id,
-      expiryTime: endTimes,
-    };
+    // const userSubscriptionPayload = {
+    //   sellerId: result?.id,
+    //   subscribedPlan: subscriptionPlanDetails?.id,
+    //   expiryTime: endTimes,
+    // };
     // const userSubscriptionPlanCreated =
     //   await this.prisma.userSubscriptions.create({
     //     data: userSubscriptionPayload,
     //   });
     await this.cacheManager.del(`otp-${userEmail}`);
     await this.cacheManager.del(`seller-info-${userEmail}`);
-    // return ApiResponse.success(result, 'Seller created successfully');
+    return ApiResponse.success(result, 'Seller created successfully');
   }
   findAll() {
     return this.prisma.seller.findMany();
