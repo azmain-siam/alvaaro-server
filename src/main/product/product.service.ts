@@ -10,6 +10,7 @@ import {
   isYachtDto,
 } from './guards';
 import { ApiResponse } from 'src/utils/common/apiresponse/apiresponse';
+import { CategoryType } from '@prisma/client';
 
 @Injectable()
 export class ProductService {
@@ -119,6 +120,112 @@ export class ProductService {
       });
     }
     return ApiResponse.success(product, 'Product created successfully');
+  }
+
+  async findAllProducts(category?: CategoryType) {
+    const products = await this.prisma.product.findMany({
+      where: category ? { category } : {},
+      include: {
+        seller: {
+          select: {
+            id: true,
+            phone: true,
+            address: true,
+            companyName: true,
+            companyWebsite: true,
+          },
+        },
+        // RealEstate: true,
+        // Car: true,
+        // Yacht: true,
+        // Watch: true,
+        // Jewellery: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+    return ApiResponse.success(products, 'Products fetched successfully');
+  }
+
+  async searchRealEstate(query?: {
+    location?: string;
+    minPrice?: string;
+    maxPrice?: string;
+    type?: string;
+  }) {
+    const { location, minPrice, maxPrice, type } = query ?? {};
+    console.log(type);
+    const products = await this.prisma.product.findMany({
+      where: {
+        category: 'REAL_ESTATE',
+        price: {
+          gte: minPrice ? minPrice : undefined,
+          lte: maxPrice ? maxPrice : undefined,
+        },
+        AND: [
+          location
+            ? {
+                RealEstate: {
+                  is: {
+                    OR: [
+                      { address: { contains: location, mode: 'insensitive' } },
+                      { city: { contains: location, mode: 'insensitive' } },
+                      { state: { contains: location, mode: 'insensitive' } },
+                      { zip: { contains: location, mode: 'insensitive' } },
+                    ],
+                  },
+                },
+              }
+            : {},
+
+          type
+            ? {
+                RealEstate: {
+                  is: {
+                    feature: {
+                      has: type,
+                    },
+                  },
+                },
+              }
+            : {},
+        ],
+      },
+      include: {
+        RealEstate: true,
+        seller: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    return ApiResponse.success(
+      products,
+      'Real estate products fetched successfully',
+    );
+  }
+
+  async findProductBySellerId(sellerId: string) {
+    const products = await this.prisma.product.findMany({
+      where: { sellerId },
+      include: {
+        seller: {
+          select: {
+            id: true,
+            phone: true,
+            address: true,
+            companyName: true,
+            companyWebsite: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+    return ApiResponse.success(products, 'Products fetched successfully');
   }
 
   async update(id: string) {

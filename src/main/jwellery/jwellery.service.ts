@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { CreateJewelleryDto } from './dto/create-jwellery.dto';
 import { PrismaService } from 'src/prisma-service/prisma-service.service';
 import { ApiResponse } from 'src/utils/common/apiresponse/apiresponse';
 

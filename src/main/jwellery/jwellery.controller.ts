@@ -1,21 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Param,
-  Delete,
-  UseInterceptors,
-  UploadedFiles,
-} from '@nestjs/common';
+import { Controller, Get, Param, Delete } from '@nestjs/common';
 import { JewelleryService } from './jwellery.service';
-import { CreateJewelleryDto } from './dto/create-jwellery.dto';
-import { FilesInterceptor } from '@nestjs/platform-express';
-import { ApiBody, ApiConsumes } from '@nestjs/swagger';
-import { uploadMultipleToCloudinary } from 'src/utils/cloudinary/cloudinary';
 
 @Controller('jwellery')
 export class JwelleryController {
