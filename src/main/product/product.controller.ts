@@ -18,6 +18,7 @@ import { CreateWatchDto } from '../watch/dto/create-watch.dto';
 import { CreateYachtDto } from '../yacht/dto/create-yacht.dto';
 import { CreateJewelleryDto } from '../jwellery/dto/create-jwellery.dto';
 import { CategoryType } from '@prisma/client';
+import { RealEstateSearchQueryDto } from './dto/real-estate-search.dto';
 
 @Controller('product')
 export class ProductController {
@@ -107,6 +108,16 @@ export class ProductController {
   @ApiQuery({ name: 'category', enum: CategoryType, required: false })
   async findAllProducts(@Query('category') category?: CategoryType) {
     return this.productService.findAllProducts(category);
+  }
+
+  @Get('/real-estate/search')
+  @ApiQuery({ name: 'location', required: false })
+  @ApiQuery({ name: 'minPrice', required: false })
+  @ApiQuery({ name: 'maxPrice', required: false })
+  @ApiQuery({ name: 'type', required: false })
+  searchRealEstate(@Query() query?: RealEstateSearchQueryDto) {
+    console.log(query);
+    return this.productService.searchRealEstate(query);
   }
 
   @Get('/seller/:sellerId')
