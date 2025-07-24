@@ -8,6 +8,7 @@ import {
   UploadedFiles,
   Get,
   Query,
+  Req,
   Delete,
   NotFoundException,
 } from '@nestjs/common';
@@ -22,24 +23,27 @@ import { CreateJewelleryDto } from '../jwellery/dto/create-jwellery.dto';
 import { CategoryType } from '@prisma/client';
 import { RealEstateSearchQueryDto } from './dto/real-estate-search.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { Roles } from 'src/guards/roles.decorator';
+import { UserRole } from 'src/utils/common/enum/userEnum';
 
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Post('real-estate')
+  @Roles(UserRole.SELLER)
   @UseInterceptors(FilesInterceptor('images'))
   @ApiConsumes('multipart/form-data')
   @ApiBody({ type: CreateRealEstateDto })
   async createRealEstateProduct(
     @UploadedFiles() images: Express.Multer.File[],
     @Body() createProductDto: CreateRealEstateDto,
+    @Req() req: { userid: string },
   ) {
-    const sellerId = 'c5407532-a6e1-41eb-9880-e91d926e2cb5';
     return this.productService.handleProductCreation(
       createProductDto,
       images,
-      sellerId,
+      req.userid,
     );
   }
 
@@ -51,7 +55,7 @@ export class ProductController {
     @UploadedFiles() images: Express.Multer.File[],
     @Body() createProductDto: CreateCarDto,
   ) {
-    const sellerId = 'c5407532-a6e1-41eb-9880-e91d926e2cb5';
+    const sellerId = '36c77915-cd87-486d-af89-90b94bf9b453';
     return this.productService.handleProductCreation(
       createProductDto,
       images,
@@ -67,7 +71,7 @@ export class ProductController {
     @UploadedFiles() images: Express.Multer.File[],
     @Body() createProductDto: CreateWatchDto,
   ) {
-    const sellerId = 'c5407532-a6e1-41eb-9880-e91d926e2cb5';
+    const sellerId = '36c77915-cd87-486d-af89-90b94bf9b453';
     return this.productService.handleProductCreation(
       createProductDto,
       images,
@@ -83,7 +87,7 @@ export class ProductController {
     @UploadedFiles() images: Express.Multer.File[],
     @Body() createProductDto: CreateYachtDto,
   ) {
-    const sellerId = 'c5407532-a6e1-41eb-9880-e91d926e2cb5';
+    const sellerId = '36c77915-cd87-486d-af89-90b94bf9b453';
     return this.productService.handleProductCreation(
       createProductDto,
       images,
@@ -99,7 +103,7 @@ export class ProductController {
     @UploadedFiles() images: Express.Multer.File[],
     @Body() createProductDto: CreateJewelleryDto,
   ) {
-    const sellerId = 'c5407532-a6e1-41eb-9880-e91d926e2cb5';
+    const sellerId = '36c77915-cd87-486d-af89-90b94bf9b453';
     return this.productService.handleProductCreation(
       createProductDto,
       images,

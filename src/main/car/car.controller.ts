@@ -15,7 +15,7 @@ import { CarService } from './car.service';
 import { CreateCarDto } from './dto/create-car.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
-import { uploadMultipleToCloudinary } from 'src/utils/cloudinary/cloudinary';
+import { uploadMultipleToCloudinary } from 'src/utils/common/cloudinary/cloudinary';
 
 @Controller('car')
 export class CarController {

@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma-service/prisma-service.service';
-import { uploadMultipleToCloudinary } from 'src/utils/cloudinary/cloudinary';
+import { uploadMultipleToCloudinary } from 'src/utils/common/cloudinary/cloudinary';
 import { CreateProductDto } from './dto/create-product.dto';
 import {
   isCarDto,
@@ -14,16 +14,22 @@ import {
 import { ApiResponse } from 'src/utils/common/apiresponse/apiresponse';
 import { CategoryType } from '@prisma/client';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { HelperService } from 'src/utils/helper/helper.service';
 
 @Injectable()
 export class ProductService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly helperService: HelperService,
+  ) {}
 
   async handleProductCreation(
     dto: CreateProductDto,
     images: Express.Multer.File[],
-    sellerId: string,
+    userid: string,
   ) {
+    const sellerId = await this.helperService.sellerExists(userid);
+    console.log(sellerId);
     const imageUrls = images?.length
       ? (await uploadMultipleToCloudinary(images)).map(
           (res: { secure_url: string }) => res.secure_url,
@@ -40,7 +46,6 @@ export class ProductService {
         sellerId,
       },
     });
-
     if (isRealEstateDto(dto)) {
       await this.prisma.realEstate.create({
         data: {
@@ -122,6 +127,7 @@ export class ProductService {
         },
       });
     }
+    console.log('Product created successfully:', { product });
     return ApiResponse.success(product, 'Product created successfully');
   }
 

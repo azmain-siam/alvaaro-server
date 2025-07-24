@@ -13,7 +13,7 @@ import { WatchService } from './watch.service';
 import { CreateWatchDto } from './dto/create-watch.dto';
 import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { uploadMultipleToCloudinary } from 'src/utils/cloudinary/cloudinary';
+import { uploadMultipleToCloudinary } from 'src/utils/common/cloudinary/cloudinary';
 import { UpdateWatchDto } from './dto/update-watch.dto';
 
 @ApiTags('watch')

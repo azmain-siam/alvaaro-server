@@ -11,12 +11,14 @@ import { AuthService } from './auth.service';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiConsumes } from '@nestjs/swagger';
-import { uploadMultipleToCloudinary } from 'src/utils/cloudinary/cloudinary';
+import { uploadMultipleToCloudinary } from 'src/utils/common/cloudinary/cloudinary';
 import { SignInDto } from './dto/signin.dto';
-import { AuthGuard } from 'src/guards/jwt-auth.guard';
+import { AuthGuard } from 'src/guards/auth.guard';
 import { Request } from 'express';
 import { PasswordDto } from './dto/passwords.dto';
+import { Public } from 'src/guards/public.decorator';
 
+@Public()
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
