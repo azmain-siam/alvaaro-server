@@ -12,7 +12,7 @@ import {
 import { SellerService } from './seller.service';
 import { CreateSellerDto } from './dto/create-seller.dto';
 import { UpdateSellerDto } from './dto/update-seller.dto';
-import { AuthGuard } from 'src/guards/jwt-auth.guard';
+import { AuthGuard } from 'src/guards/auth.guard';
 import { Request } from 'express';
 import { OtpDto } from '../auth/dto/signin.dto';
 

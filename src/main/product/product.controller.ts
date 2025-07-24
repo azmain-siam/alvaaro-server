@@ -19,12 +19,14 @@ import { CreateYachtDto } from '../yacht/dto/create-yacht.dto';
 import { CreateJewelleryDto } from '../jwellery/dto/create-jwellery.dto';
 import { CategoryType } from '@prisma/client';
 import { RealEstateSearchQueryDto } from './dto/real-estate-search.dto';
+import { Roles } from 'src/guards/roles.decorator';
 
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Post('real-estate')
+  @Roles('admin')
   @UseInterceptors(FilesInterceptor('images'))
   @ApiConsumes('multipart/form-data')
   @ApiBody({ type: CreateRealEstateDto })
