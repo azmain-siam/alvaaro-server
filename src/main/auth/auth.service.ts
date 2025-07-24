@@ -54,11 +54,11 @@ export class AuthService {
       });
 
       if (!user) {
-        throw new UnauthorizedException('User account not found');
+        return ApiResponse.error('User not found');
       }
 
       if (user.isDeleted) {
-        throw new UnauthorizedException('This account has been deleted');
+        return ApiResponse.error('This account has been deleted');
       }
 
       const isPasswordValid = await bcrypt.compare(
@@ -67,7 +67,7 @@ export class AuthService {
       );
 
       if (!isPasswordValid) {
-        throw new UnauthorizedException('Invalid password');
+        return ApiResponse.error('Invalid password');
       }
 
       const payload = {
