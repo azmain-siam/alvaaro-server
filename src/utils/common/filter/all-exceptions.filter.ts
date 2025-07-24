@@ -35,9 +35,15 @@ export class AllExceptionsFilter implements ExceptionFilter {
     }
 
     console.log({
-      statusCode: status,
-      error: errorData,
+      errorData,
     });
+
+    if (errorData && typeof errorData === 'object' && errorData !== null) {
+      throw new HttpException(
+        'You are not authorized to perform this action',
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
 
     response.status(status).json({
       success: false,
