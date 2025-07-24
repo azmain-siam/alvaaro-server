@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma-service/prisma-service.service';
 import { uploadMultipleToCloudinary } from 'src/utils/cloudinary/cloudinary';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -11,6 +15,7 @@ import {
 } from './guards';
 import { ApiResponse } from 'src/utils/common/apiresponse/apiresponse';
 import { CategoryType } from '@prisma/client';
+import { UpdateProductDto } from './dto/update-product.dto';
 
 @Injectable()
 export class ProductService {
@@ -135,11 +140,11 @@ export class ProductService {
             companyWebsite: true,
           },
         },
-        // RealEstate: true,
-        // Car: true,
-        // Yacht: true,
-        // Watch: true,
-        // Jewellery: true,
+        RealEstate: true,
+        Car: true,
+        Yacht: true,
+        Watch: true,
+        Jewellery: true,
       },
       orderBy: {
         createdAt: 'desc',
@@ -242,20 +247,69 @@ export class ProductService {
     }
   }
 
-  async updateProduct(id: string, data: Partial<CreateProductDto>) {
+  async updateProduct(productId: string, updateDto: UpdateProductDto) {
     try {
-      const updatedProduct = await this.prisma.product.update({
-        where: { id },
-        data,
+      const {
+        name,
+        description,
+        price,
+        trending,
+        RealEstate,
+        Car,
+        Watch,
+        Yacht,
+        Jewellery,
+      } = updateDto;
+
+      const productUpdateData: any = {
+        name,
+        description,
+        price,
+        trending,
+      };
+
+      // Add relational updates conditionally
+      if (RealEstate) {
+        productUpdateData.RealEstate = {
+          update: RealEstate,
+        };
+      }
+      if (Car) {
+        productUpdateData.Car = {
+          update: Car,
+        };
+      }
+      if (Watch) {
+        productUpdateData.Watch = {
+          update: Watch,
+        };
+      }
+      if (Yacht) {
+        productUpdateData.Yacht = {
+          update: Yacht,
+        };
+      }
+      if (Jewellery) {
+        productUpdateData.Jewellery = {
+          update: Jewellery,
+        };
+      }
+
+      return await this.prisma.product.update({
+        where: { id: productId },
+        data: productUpdateData,
+        include: {
+          seller: true,
+          RealEstate: true,
+          Car: true,
+          Watch: true,
+          Yacht: true,
+          Jewellery: true,
+        },
       });
-      return ApiResponse.success(
-        updatedProduct,
-        'Product updated successfully',
-      );
     } catch (error) {
-      return ApiResponse.error(
-        'Failed to update product, please try again later',
-        error,
+      throw new InternalServerErrorException(
+        error.message || 'Failed to update product',
       );
     }
   }

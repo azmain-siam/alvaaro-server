@@ -9,6 +9,7 @@ import {
   Get,
   Query,
   Delete,
+  NotFoundException,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { FilesInterceptor } from '@nestjs/platform-express';
@@ -20,6 +21,7 @@ import { CreateYachtDto } from '../yacht/dto/create-yacht.dto';
 import { CreateJewelleryDto } from '../jwellery/dto/create-jwellery.dto';
 import { CategoryType } from '@prisma/client';
 import { RealEstateSearchQueryDto } from './dto/real-estate-search.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
 
 @Controller('product')
 export class ProductController {
@@ -129,6 +131,22 @@ export class ProductController {
   @Get('/seller/:sellerId')
   findProductBySellerId(@Param('sellerId') sellerId: string) {
     return this.productService.findProductBySellerId(sellerId);
+  }
+
+  @Patch(':id')
+  @ApiConsumes('application/json')
+  async updateProduct(
+    @Param('id') id: string,
+    @Body() updateProductDto: UpdateProductDto,
+  ) {
+    const updatedProduct = await this.productService.updateProduct(
+      id,
+      updateProductDto,
+    );
+    if (!updatedProduct) {
+      throw new NotFoundException(`Product with ID ${id} not found`);
+    }
+    return updatedProduct;
   }
 
   @Patch('trending/:id')
