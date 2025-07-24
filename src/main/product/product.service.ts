@@ -37,7 +37,6 @@ export class ProductService {
         sellerId,
       },
     });
-
     if (isRealEstateDto(dto)) {
       await this.prisma.realEstate.create({
         data: {
@@ -119,6 +118,7 @@ export class ProductService {
         },
       });
     }
+    console.log('Product created successfully:', { product });
     return ApiResponse.success(product, 'Product created successfully');
   }
 
