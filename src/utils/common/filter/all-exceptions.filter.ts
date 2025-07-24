@@ -6,7 +6,6 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { ApiResponse } from '../apiresponse/apiresponse';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
@@ -35,8 +34,24 @@ export class AllExceptionsFilter implements ExceptionFilter {
       message = 'Internal server error';
     }
 
-    const errorPayload = ApiResponse.error(message, errorData);
+    console.log({
+      statusCode: status,
+      error: errorData,
+    });
 
-    response.status(status).json(errorPayload);
+    response.status(status).json({
+      success: false,
+      error:
+        errorData &&
+        typeof errorData === 'object' &&
+        errorData !== null &&
+        'message' in errorData
+          ? (errorData as { message: string }).message
+          : typeof errorData === 'object' &&
+              errorData !== null &&
+              'error' in errorData
+            ? (errorData as { error: string }).error
+            : message,
+    });
   }
 }
