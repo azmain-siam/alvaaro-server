@@ -1,1 +1,3 @@
-export class Subscriptionplan {}
+export class Subscriptionplan {
+    
+}

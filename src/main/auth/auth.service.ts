@@ -30,7 +30,8 @@ export class AuthService {
       const data = {
         ...createUserDto,
         password: hashedPassword,
-        image: imageUrl,
+        images: imageUrl,
+
       };
 
       const result = await this.prisma.user.create({ data });

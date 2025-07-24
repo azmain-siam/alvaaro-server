@@ -13,7 +13,7 @@ import { ContactModule } from './main/contact/contact.module';
 import { CacheModule } from '@nestjs/cache-manager';
 import { RealEstateModule } from './main/real-estate/real-estate.module';
 import { YachtModule } from './main/yacht/yacht.module';
-import { SubscriptionPlanModule } from './main/subscription-plan/subscription-plan.module';
+
 
 @Module({
   imports: [
@@ -33,7 +33,7 @@ import { SubscriptionPlanModule } from './main/subscription-plan/subscription-pl
     }),
     RealEstateModule,
     YachtModule,
-    SubscriptionPlanModule,
+
   ],
 })
 export class AppModule {}

@@ -13,7 +13,7 @@ CREATE TABLE "User" (
     "fullName" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
-    "image" TEXT NOT NULL,
+    "images" TEXT NOT NULL,
     "role" "UserRole" NOT NULL DEFAULT 'USER',
     "isDeleted" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -38,13 +38,11 @@ CREATE TABLE "Seller" (
 );
 
 -- CreateTable
-CREATE TABLE "UserSubscriptions" (
+CREATE TABLE "UserSubscriptionValidity" (
     "id" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
+    "sellerId" TEXT NOT NULL,
     "subscribedPlan" TEXT NOT NULL,
-    "amount" TEXT NOT NULL,
-    "durationDays" TEXT NOT NULL,
-    "isActive" BOOLEAN NOT NULL DEFAULT false,
+    "expiryTime" TIMESTAMP(3) NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL
 );
@@ -58,6 +56,7 @@ CREATE TABLE "Product" (
     "price" TEXT NOT NULL,
     "images" TEXT[],
     "category" "CategoryType" NOT NULL,
+    "trending" INTEGER NOT NULL DEFAULT 0,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL
 );
@@ -148,6 +147,8 @@ CREATE TABLE "SubscriptionPlan" (
     "type" "SubscriptionPlanType" NOT NULL,
     "length" TEXT NOT NULL,
     "price" TEXT NOT NULL,
+    "features" TEXT[],
+    "status" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -186,10 +187,13 @@ CREATE UNIQUE INDEX "Seller_id_key" ON "Seller"("id");
 CREATE UNIQUE INDEX "Seller_userId_key" ON "Seller"("userId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "UserSubscriptions_id_key" ON "UserSubscriptions"("id");
+CREATE UNIQUE INDEX "UserSubscriptionValidity_id_key" ON "UserSubscriptionValidity"("id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "UserSubscriptions_userId_key" ON "UserSubscriptions"("userId");
+CREATE UNIQUE INDEX "UserSubscriptionValidity_sellerId_key" ON "UserSubscriptionValidity"("sellerId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "UserSubscriptionValidity_subscribedPlan_key" ON "UserSubscriptionValidity"("subscribedPlan");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Product_id_key" ON "Product"("id");
@@ -237,25 +241,28 @@ CREATE UNIQUE INDEX "Newsletter_id_key" ON "Newsletter"("id");
 CREATE UNIQUE INDEX "Newsletter_email_key" ON "Newsletter"("email");
 
 -- AddForeignKey
-ALTER TABLE "Seller" ADD CONSTRAINT "Seller_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Seller" ADD CONSTRAINT "Seller_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "UserSubscriptions" ADD CONSTRAINT "UserSubscriptions_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "UserSubscriptionValidity" ADD CONSTRAINT "UserSubscriptionValidity_sellerId_fkey" FOREIGN KEY ("sellerId") REFERENCES "Seller"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "UserSubscriptionValidity" ADD CONSTRAINT "UserSubscriptionValidity_subscribedPlan_fkey" FOREIGN KEY ("subscribedPlan") REFERENCES "SubscriptionPlan"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Product" ADD CONSTRAINT "Product_sellerId_fkey" FOREIGN KEY ("sellerId") REFERENCES "Seller"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Car" ADD CONSTRAINT "Car_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Car" ADD CONSTRAINT "Car_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Watch" ADD CONSTRAINT "Watch_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Watch" ADD CONSTRAINT "Watch_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Jewellery" ADD CONSTRAINT "Jewellery_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Jewellery" ADD CONSTRAINT "Jewellery_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "RealEstate" ADD CONSTRAINT "RealEstate_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "RealEstate" ADD CONSTRAINT "RealEstate_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Yacht" ADD CONSTRAINT "Yacht_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
