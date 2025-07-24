@@ -11,6 +11,7 @@ import {
   Req,
   Delete,
   NotFoundException,
+  UseGuards,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { FilesInterceptor } from '@nestjs/platform-express';
@@ -25,13 +26,15 @@ import { RealEstateSearchQueryDto } from './dto/real-estate-search.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Roles } from 'src/guards/roles.decorator';
 import { UserRole } from 'src/utils/common/enum/userEnum';
+import { AuthGuard } from 'src/guards/auth.guard';
 
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
-  @Post('real-estate')
+  @UseGuards(AuthGuard)
   @Roles(UserRole.SELLER)
+  @Post('real-estate')
   @UseInterceptors(FilesInterceptor('images'))
   @ApiConsumes('multipart/form-data')
   @ApiBody({ type: CreateRealEstateDto })
@@ -40,6 +43,7 @@ export class ProductController {
     @Body() createProductDto: CreateRealEstateDto,
     @Req() req: { userid: string },
   ) {
+    console.log(req.userid);
     return this.productService.handleProductCreation(
       createProductDto,
       images,
