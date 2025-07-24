@@ -3,9 +3,7 @@ import { PrismaService } from 'src/prisma-service/prisma-service.service';
 
 @Injectable()
 export class HelperService {
-  constructor(
-    private readonly prismaService: PrismaService, // Assuming you have a PrismaService to interact with your database
-  ) {}
+  constructor(private readonly prismaService: PrismaService) {}
 
   async userExists(userId: string): Promise<boolean> {
     const user = await this.prismaService.user.findUnique({
@@ -13,10 +11,11 @@ export class HelperService {
     });
     return !!user;
   }
-  async sellerExists(sellerId: string): Promise<boolean> {
+  async sellerExists(sellerId: string) {
     const seller = await this.prismaService.seller.findUnique({
       where: { id: sellerId },
+      select: { id: true },
     });
-    return !!seller;
+    return seller !== null;
   }
 }
