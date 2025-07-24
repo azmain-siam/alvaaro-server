@@ -16,7 +16,9 @@ import { SignInDto } from './dto/signin.dto';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { Request } from 'express';
 import { PasswordDto } from './dto/passwords.dto';
+import { Public } from 'src/guards/public.decorator';
 
+@Public()
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}

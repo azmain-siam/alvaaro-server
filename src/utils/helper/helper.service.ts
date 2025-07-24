@@ -11,11 +11,16 @@ export class HelperService {
     });
     return !!user;
   }
-  async sellerExists(sellerId: string) {
+
+  async sellerExists(userId: string) {
     const seller = await this.prismaService.seller.findUnique({
-      where: { id: sellerId },
+      where: { userId },
       select: { id: true },
     });
-    return seller !== null;
+    console.log('sellerExists', seller);
+    if (!seller) {
+      throw new Error('Seller does not exist');
+    }
+    return seller.id;
   }
 }

@@ -11,16 +11,22 @@ import {
 } from './guards';
 import { ApiResponse } from 'src/utils/common/apiresponse/apiresponse';
 import { CategoryType } from '@prisma/client';
+import { HelperService } from 'src/utils/helper/helper.service';
 
 @Injectable()
 export class ProductService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly helperService: HelperService,
+  ) {}
 
   async handleProductCreation(
     dto: CreateProductDto,
     images: Express.Multer.File[],
-    sellerId: string,
+    userid: string,
   ) {
+    const sellerId = await this.helperService.sellerExists(userid);
+    console.log(sellerId);
     const imageUrls = images?.length
       ? (await uploadMultipleToCloudinary(images)).map(
           (res: { secure_url: string }) => res.secure_url,
