@@ -242,6 +242,24 @@ export class ProductService {
     }
   }
 
+  async updateProduct(id: string, data: Partial<CreateProductDto>) {
+    try {
+      const updatedProduct = await this.prisma.product.update({
+        where: { id },
+        data,
+      });
+      return ApiResponse.success(
+        updatedProduct,
+        'Product updated successfully',
+      );
+    } catch (error) {
+      return ApiResponse.error(
+        'Failed to update product, please try again later',
+        error,
+      );
+    }
+  }
+
   async update(id: string) {
     return await this.prisma.product.update({
       where: { id },
