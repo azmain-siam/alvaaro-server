@@ -12,7 +12,7 @@ model User {
   fullName  String
   email     String   @unique
   password  String
-  image     String
+  images     String
   role      UserRole @default(USER)
   isDeleted Boolean  @default(false)
   Seller    Seller?
@@ -33,19 +33,19 @@ model Seller {
   zip                String
   isVerified         Boolean            @default(false)
   subscriptionStatus Boolean            @default(false)
-  Subscriptions      UserSubscriptions?
+  Subscriptions      UserSubscriptionValidity?
   createdAt          DateTime           @default(now())
   updatedAt          DateTime           @updatedAt
   Product            Product[]
 }
 
-model UserSubscriptions {
+model UserSubscriptionValidity {
   id             String           @unique @default(uuid())
   sellerId       String           @unique
   seller         Seller           @relation(fields: [sellerId], references: [id])
   subscribedPlan String           @unique
   subscription   SubscriptionPlan @relation(fields: [subscribedPlan], references: [id])
-  expiryTime     String
+  expiryTime     DateTime
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
 }
@@ -160,9 +160,11 @@ model SubscriptionPlan {
   type              SubscriptionPlanType @unique
   length            String
   price             String
+  features          String[]
+  status            Boolean              @default(false)
   createdAt         DateTime             @default(now())
   updatedAt         DateTime             @updatedAt
-  UserSubscriptions UserSubscriptions?
+  UserSubscriptions UserSubscriptionValidity?
 }
 
 model Contact {

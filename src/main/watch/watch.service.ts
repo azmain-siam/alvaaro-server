@@ -7,6 +7,7 @@ import { PrismaService } from 'src/prisma-service/prisma-service.service';
 import { CreateWatchDto } from './dto/create-watch.dto';
 import { UpdateWatchDto } from './dto/update-watch.dto';
 import { CategoryType } from '@prisma/client';
+import { ApiResponse } from 'src/utils/common/apiresponse/apiresponse';
 
 @Injectable()
 export class WatchService {
@@ -62,9 +63,10 @@ export class WatchService {
 
   async findAll() {
     try {
-      return await this.prisma.watch.findMany({
+      const allWatch=  await this.prisma.watch.findMany({
         include: { product: true },
       });
+      return ApiResponse.success(allWatch, 'Watches fetched successfully');
     } catch (error) {
       console.error('Find All Watches Error:', error);
       throw new InternalServerErrorException('Failed to fetch watches.');
@@ -82,12 +84,10 @@ export class WatchService {
         throw new NotFoundException(`Watch with ID ${id} not found`);
       }
 
-      return watch;
+      return ApiResponse.success(watch, 'Watch fetched successfully');
     } catch (error) {
       console.error(`Find Watch Error for ID ${id}:`, error);
-      throw error instanceof NotFoundException
-        ? error
-        : new InternalServerErrorException('Failed to fetch watch.');
+      throw new InternalServerErrorException('Failed to fetch watch.');
     }
   }
 
@@ -128,7 +128,7 @@ export class WatchService {
         include: { product: true },
       });
 
-      return updatedWatch;
+      return ApiResponse.success(updatedWatch, 'Watch updated successfully');
     } catch (error) {
       console.error(`Update Watch Error for ID ${id}:`, error);
       throw new InternalServerErrorException('Failed to update watch.');
@@ -153,9 +153,7 @@ export class WatchService {
       return { message: 'Watch and associated product deleted successfully' };
     } catch (error) {
       console.error(`Delete Watch Error for ID ${id}:`, error);
-      throw error instanceof NotFoundException
-        ? error
-        : new InternalServerErrorException('Failed to delete watch.');
+      throw new InternalServerErrorException('Failed to delete watch.');
     }
   }
 }

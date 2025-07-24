@@ -11,12 +11,13 @@ import { JwtService } from '@nestjs/jwt';
 import { PasswordDto } from './dto/passwords.dto';
 import { ApiResponse } from 'src/utils/common/apiresponse/apiresponse';
 
+
 @Injectable()
 export class AuthService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
-  ) {}
+  ) { }
 
   async signup(createUserDto: CreateUserDto, imageUrl: string) {
     try {
@@ -83,6 +84,7 @@ export class AuthService {
       };
     }
   }
+  
   async changePassword(id: string, dto: PasswordDto) {
     const user = await this.prisma.user.findUnique({ where: { id } });
 
