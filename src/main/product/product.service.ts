@@ -161,7 +161,7 @@ export class ProductService {
     type?: string;
   }) {
     const { location, minPrice, maxPrice, type } = query ?? {};
-    console.log(type);
+    // console.log(type);
     const products = await this.prisma.product.findMany({
       where: {
         category: 'REAL_ESTATE',
@@ -232,6 +232,20 @@ export class ProductService {
       },
     });
     return ApiResponse.success(products, 'Products fetched successfully');
+  }
+
+  async deleteProduct(id: string) {
+    try {
+      const product = await this.prisma.product.delete({
+        where: { id },
+      });
+      return ApiResponse.success(product, 'Product deleted successfully');
+    } catch (error) {
+      return ApiResponse.error(
+        'Failed to delete product, please try again later',
+        error,
+      );
+    }
   }
 
   async update(id: string) {

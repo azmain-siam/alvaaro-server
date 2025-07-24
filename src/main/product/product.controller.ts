@@ -7,8 +7,11 @@ import {
   UseInterceptors,
   UploadedFiles,
   Get,
-  Query,
+  Query, 
   Req,
+ 
+  Delete,
+ 
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { FilesInterceptor } from '@nestjs/platform-express';
@@ -122,6 +125,11 @@ export class ProductController {
   searchRealEstate(@Query() query?: RealEstateSearchQueryDto) {
     console.log(query);
     return this.productService.searchRealEstate(query);
+  }
+
+  @Delete(':id')
+  deleteProduct(@Param('id') id: string) {
+    return this.productService.deleteProduct(id);
   }
 
   @Get('/seller/:sellerId')
