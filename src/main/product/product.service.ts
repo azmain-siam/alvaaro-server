@@ -1,8 +1,6 @@
-import {
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-} from '@nestjs/common';
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma-service/prisma-service.service';
 import { uploadMultipleToCloudinary } from 'src/utils/cloudinary/cloudinary';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -295,7 +293,7 @@ export class ProductService {
         };
       }
 
-      return await this.prisma.product.update({
+      const result = await this.prisma.product.update({
         where: { id: productId },
         data: productUpdateData,
         include: {
@@ -307,9 +305,12 @@ export class ProductService {
           Jewellery: true,
         },
       });
+
+      return result;
     } catch (error) {
-      throw new InternalServerErrorException(
-        error.message || 'Failed to update product',
+      return ApiResponse.error(
+        'Failed to update product, please try again later',
+        error,
       );
     }
   }
