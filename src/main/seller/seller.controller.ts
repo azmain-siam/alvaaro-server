@@ -12,9 +12,12 @@ import {
 import { SellerService } from './seller.service';
 import { CreateSellerDto } from './dto/create-seller.dto';
 import { UpdateSellerDto } from './dto/update-seller.dto';
-import { AuthGuard } from 'src/guards/jwt-auth.guard';
+import { AuthGuard } from 'src/guards/auth.guard';
 import { Request } from 'express';
 import { OtpDto } from '../auth/dto/signin.dto';
+import { Roles } from 'src/guards/roles.decorator';
+import { RolesGuard } from 'src/guards/role.guard';
+import { UserRole } from 'src/utils/common/enum/userEnum';
 
 @UseGuards(AuthGuard)
 @Controller('seller')
@@ -41,6 +44,8 @@ export class SellerController {
   }
 
   @Get()
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
   findAll() {
     return this.sellerService.findAll();
   }
