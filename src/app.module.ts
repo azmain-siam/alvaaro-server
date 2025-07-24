@@ -16,6 +16,7 @@ import { YachtModule } from './main/yacht/yacht.module';
 import { RolesGuard } from './guards/role.guard';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './guards/auth.guard';
+import { HelperModule } from './utils/helper/helper.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { AuthGuard } from './guards/auth.guard';
     }),
     RealEstateModule,
     YachtModule,
+    HelperModule,
   ],
   providers: [
     {
