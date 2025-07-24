@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma-service/prisma-service.service';
-import { uploadMultipleToCloudinary } from 'src/utils/cloudinary/cloudinary';
+import { uploadMultipleToCloudinary } from 'src/utils/common/cloudinary/cloudinary';
 import { CreateProductDto } from './dto/create-product.dto';
 import {
   isCarDto,

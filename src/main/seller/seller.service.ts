@@ -83,6 +83,7 @@ export class SellerService {
     await this.cacheManager.del(`seller-info-${userEmail}`);
     return ApiResponse.success(result, 'Seller created successfully');
   }
+
   findAll() {
     return this.prisma.seller.findMany();
   }

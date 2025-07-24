@@ -45,7 +45,7 @@ export class SellerController {
 
   @Get()
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles(UserRole.SELLER)
+  @Roles(UserRole.ADMIN)
   findAll() {
     return this.sellerService.findAll();
   }
