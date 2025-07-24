@@ -1,9 +1,4 @@
-import {
-  HttpException,
-  Inject,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateSellerDto } from './dto/create-seller.dto';
 import { UpdateSellerDto } from './dto/update-seller.dto';
 import { PrismaService } from 'src/prisma-service/prisma-service.service';
@@ -26,13 +21,13 @@ export class SellerService {
     userEmail: string,
   ) {
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    console.log(`Generated OTP: ${otp} for email: ${userEmail}`);
     const cacheKey = `otp-${userEmail}`;
     const sellerInfoKey = `seller-info-${userEmail}`;
 
     // Save to cache
-    const otps = await this.cacheManager.set(cacheKey, otp);
-    console.log(otps);
-    const datas = await this.cacheManager.set(sellerInfoKey, createSellerDto);
+    await this.cacheManager.set(cacheKey, otp);
+    await this.cacheManager.set(sellerInfoKey, createSellerDto);
     await this.mail.sendMail(
       userEmail,
       `Your otp is ${otp}. This otp valid for 5 minutes`,
@@ -40,6 +35,14 @@ export class SellerService {
     return { message: 'OTP sent successfully. Please check your email.' };
   }
   async verifyOtpAndCreate(otp: OtpDto, userId: string, userEmail: string) {
+    // seller info check in database
+    const sellerInfo = await this.prisma.seller.findUnique({
+      where: { userId },
+    });
+    if (sellerInfo) {
+      return ApiResponse.error('You are already a seller');
+    }
+
     const cacheOtp = await this.cacheManager.get(`otp-${userEmail}`);
     const userInfo = await this.cacheManager.get<CreateSellerDto>(
       `seller-info-${userEmail}`,
@@ -49,44 +52,33 @@ export class SellerService {
       return ApiResponse.error('Otp has been expired');
     }
 
-    // const subscriptionPlanDetails =
-    //   await this.prisma.subscriptionPlan.findUnique({
-    //     where: { id: userInfo.subscriptionPlan },
-    //   });
-    // if (!subscriptionPlanDetails) {
-    //   ApiResponse.error('Your Choosing subscription has been deleted');
-    // }
-
-    const result = await this.prisma.seller.upsert({
-      where: { userId },
-      update: {},
-      create: {
+    const subscriptionPlanDetails =
+      await this.prisma.subscriptionPlan.findUnique({
+        where: { id: userInfo.subscriptionPlan },
+      });
+    if (!subscriptionPlanDetails) {
+      return ApiResponse.error('Your Choosing subscription has been deleted');
+    }
+    if (cacheOtp !== otp.otp) {
+      return ApiResponse.error('Invalid OTP');
+    }
+    const result = await this.prisma.seller.create({
+      data: {
         userId,
-        ...userInfo,
+        companyName: userInfo.companyName,
+        companyWebsite: userInfo.companyWebsite,
+        phone: userInfo.phone,
+        address: userInfo.address,
+        state: userInfo.state,
+        city: userInfo.city,
+        zip: userInfo.zip,
       },
     });
-    // if (!result) {
-    //   ApiResponse.error('Failed to create seller Account');
-    // }
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { role: 'SELLER' },
+    });
 
-    // if (!subscriptionPlanDetails?.length) {
-    //   throw new Error('Invalid month length format.');
-    // }
-    // const now = new Date();
-    // const endTime = new Date(now);
-    // const monthLengthStr = parseInt(subscriptionPlanDetails?.length);
-    // const endTimes = endTime.setMonth(endTime.getMonth() + monthLengthStr);
-    // endTime.toISOString();
-
-    // const userSubscriptionPayload = {
-    //   sellerId: result?.id,
-    //   subscribedPlan: subscriptionPlanDetails?.id,
-    //   expiryTime: endTimes,
-    // };
-    // const userSubscriptionPlanCreated =
-    //   await this.prisma.userSubscriptions.create({
-    //     data: userSubscriptionPayload,
-    //   });
     await this.cacheManager.del(`otp-${userEmail}`);
     await this.cacheManager.del(`seller-info-${userEmail}`);
     return ApiResponse.success(result, 'Seller created successfully');
