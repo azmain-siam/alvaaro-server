@@ -29,7 +29,7 @@ export class SubscriptionplanService {
         'Subscription plan created successfully',
       );
     } catch (err) {
-      // aikhane vol error handle kora hoyeche
+      // aikhane vol process error handle kora hoyeche
       return ApiResponse.error(err, 'Subscription faild');
     }
   }
@@ -39,6 +39,7 @@ export class SubscriptionplanService {
       const result = await this.prisma.subscriptionPlan.findMany();
       return result;
     } catch (err) {
+      // aikhane vol process error handle kora hoyeche
       return ApiResponse.error(err, 'Subscription does not fetches');
     }
   }
@@ -54,6 +55,7 @@ export class SubscriptionplanService {
       });
 
       if (!isPlanExists) {
+        // amader to response banano hoise, oita use korei error throw kora hobe
         throw new BadRequestException('Plan can not found');
       }
 
@@ -71,6 +73,7 @@ export class SubscriptionplanService {
       console.log(result, 'res');
       return ApiResponse.success(result, 'Plan Update successfully');
     } catch (err) {
+      // aikhane vol process error handle kora hoyeche
       return ApiResponse.error(err, 'Plan Update failed');
     }
   }
