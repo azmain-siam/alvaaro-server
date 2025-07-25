@@ -1,75 +1,75 @@
-import { features } from 'process';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateSubscriptionPlanDto } from './dto/create-subscriptionplan.dto';
 import { PrismaService } from 'src/prisma-service/prisma-service.service';
 import { ApiResponse } from 'src/utils/common/apiresponse/apiresponse';
-import { UpdateProductDto } from '../product/dto/update-product.dto';
 import { UpdateSubscriptionplanDto } from './dto/update-subscriptionplan.dto';
-
 
 @Injectable()
 export class SubscriptionplanService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async createSubscription(dto: CreateSubscriptionPlanDto) {
-
     try {
       const data = {
         type: dto.type,
         price: dto.price,
         length: dto.length,
         features: dto.features,
-      }
+      };
 
       const result = await this.prisma.subscriptionPlan.upsert({
         where: { type: dto.type },
         update: data,
-        create: { ...dto, status: true }
-      })
+        create: { ...dto, status: true },
+      });
 
-      return ApiResponse.success(result, 'Subscription plan created successfully');
+      return ApiResponse.success(
+        result,
+        'Subscription plan created successfully',
+      );
     } catch (err) {
-      return ApiResponse.error(err, "Subscription faild")
+      return ApiResponse.error(err, 'Subscription faild');
     }
-
   }
 
   async findAll() {
     try {
       const result = await this.prisma.subscriptionPlan.findMany();
-      return result
+      return result;
     } catch (err) {
-      return ApiResponse.error(err, "Subscription does not fetches")
+      return ApiResponse.error(err, 'Subscription does not fetches');
     }
   }
 
   async updatePlanByAdmin(planId: string, dto: UpdateSubscriptionplanDto) {
     try {
-      const { features, length, price, type } = dto
+      const { features, length, price, type } = dto;
 
       const isPlanExists = await this.prisma.subscriptionPlan.findUnique({
         where: {
-          id: planId
-        }
-      })
+          id: planId,
+        },
+      });
 
       if (!isPlanExists) {
-        throw new BadRequestException("Plan can not found");
+        throw new BadRequestException('Plan can not found');
       }
 
       const result = await this.prisma.subscriptionPlan.update({
         where: {
-          type
+          type,
         },
         data: {
-          length, features, price, type
-        }
-      })
-      console.log(result, "res")
-      return ApiResponse.success(result, "Plan Update successfully")
+          length,
+          features,
+          price,
+          type,
+        },
+      });
+      console.log(result, 'res');
+      return ApiResponse.success(result, 'Plan Update successfully');
     } catch (err) {
-      return ApiResponse.error(err, "Plan Update failed")
+      return ApiResponse.error(err, 'Plan Update failed');
     }
-
   }
 }
