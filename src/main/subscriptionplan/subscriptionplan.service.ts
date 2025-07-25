@@ -20,6 +20,7 @@ export class SubscriptionplanService {
       const result = await this.prisma.subscriptionPlan.upsert({
         where: { type: dto.type },
         update: data,
+        // status er beparta bjte pari nai
         create: { ...dto, status: true },
       });
 
@@ -28,6 +29,7 @@ export class SubscriptionplanService {
         'Subscription plan created successfully',
       );
     } catch (err) {
+      // aikhane vol error handle kora hoyeche
       return ApiResponse.error(err, 'Subscription faild');
     }
   }
