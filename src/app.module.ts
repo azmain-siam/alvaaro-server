@@ -18,6 +18,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './guards/auth.guard';
 import { HelperModule } from './utils/helper/helper.module';
 
+
 @Module({
   imports: [
     UserModule,
@@ -36,6 +37,9 @@ import { HelperModule } from './utils/helper/helper.module';
     }),
     RealEstateModule,
     YachtModule,
+ 
+
+ 
     HelperModule,
   ],
   providers: [
@@ -47,6 +51,7 @@ import { HelperModule } from './utils/helper/helper.module';
       provide: APP_GUARD,
       useClass: RolesGuard,
     },
+ 
   ],
 })
 export class AppModule {}

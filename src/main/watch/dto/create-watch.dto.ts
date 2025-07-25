@@ -40,7 +40,6 @@ export class CreateWatchDto extends CreateProductDto {
     example: 'Oyster Perpetual 41',
   })
   @IsString()
-  @IsNotEmpty()
   model: string;
 
   @ApiProperty({
@@ -48,7 +47,6 @@ export class CreateWatchDto extends CreateProductDto {
     example: '100 meters',
   })
   @IsString()
-  @IsNotEmpty()
   waterResistance: string;
 
   @ApiProperty({
@@ -56,7 +54,6 @@ export class CreateWatchDto extends CreateProductDto {
     example: 'Analog',
   })
   @IsString()
-  @IsNotEmpty()
   displayType: string;
 
   @ApiProperty({
@@ -64,7 +61,6 @@ export class CreateWatchDto extends CreateProductDto {
     example: 'Stainless Steel',
   })
   @IsString()
-  @IsNotEmpty()
   strapMaterial: string;
 
   @ApiProperty({
@@ -72,7 +68,6 @@ export class CreateWatchDto extends CreateProductDto {
     example: 'Automatic',
   })
   @IsString()
-  @IsNotEmpty()
   movement: string;
 
   @ApiProperty({
@@ -80,7 +75,6 @@ export class CreateWatchDto extends CreateProductDto {
     example: '41mm',
   })
   @IsString()
-  @IsNotEmpty()
   size: string;
 
   @ApiProperty({
@@ -88,7 +82,6 @@ export class CreateWatchDto extends CreateProductDto {
     example: 'Deployment Clasp',
   })
   @IsString()
-  @IsNotEmpty()
   tractionType: string;
 
   @ApiProperty({
