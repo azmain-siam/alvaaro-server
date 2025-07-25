@@ -21,6 +21,14 @@ export class AuthService {
 
   async signup(createUserDto: CreateUserDto, imageUrl: string) {
     try {
+      const existingUser = await this.prisma.user.findUnique({
+        where: { email: createUserDto.email },
+      });
+      if (existingUser) {
+        return ApiResponse.error(
+          'Already registered with this email, please login',
+        );
+      }
       const saltOrRounds = 10;
       const hashedPassword = await bcrypt.hash(
         createUserDto.password,
@@ -48,11 +56,11 @@ export class AuthService {
       });
 
       if (!user) {
-        throw new UnauthorizedException('User account not found');
+        return ApiResponse.error('User not found');
       }
 
       if (user.isDeleted) {
-        throw new UnauthorizedException('This account has been deleted');
+        return ApiResponse.error('This account has been deleted');
       }
 
       const isPasswordValid = await bcrypt.compare(
@@ -61,7 +69,7 @@ export class AuthService {
       );
 
       if (!isPasswordValid) {
-        throw new UnauthorizedException('Invalid password');
+        return ApiResponse.error('Invalid password');
       }
 
       const payload = {

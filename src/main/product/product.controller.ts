@@ -8,7 +8,10 @@ import {
   UploadedFiles,
   Get,
   Query,
+  Req,
   Delete,
+  NotFoundException,
+  UseGuards,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { FilesInterceptor } from '@nestjs/platform-express';
@@ -20,11 +23,17 @@ import { CreateYachtDto } from '../yacht/dto/create-yacht.dto';
 import { CreateJewelleryDto } from '../jwellery/dto/create-jwellery.dto';
 import { CategoryType } from '@prisma/client';
 import { RealEstateSearchQueryDto } from './dto/real-estate-search.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
+import { Roles } from 'src/guards/roles.decorator';
+import { UserRole } from 'src/utils/common/enum/userEnum';
+import { AuthGuard } from 'src/guards/auth.guard';
 
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
+  @UseGuards(AuthGuard)
+  @Roles(UserRole.SELLER)
   @Post('real-estate')
   @UseInterceptors(FilesInterceptor('images'))
   @ApiConsumes('multipart/form-data')
@@ -32,12 +41,13 @@ export class ProductController {
   async createRealEstateProduct(
     @UploadedFiles() images: Express.Multer.File[],
     @Body() createProductDto: CreateRealEstateDto,
+    @Req() req: { userid: string },
   ) {
-    const sellerId = 'c5407532-a6e1-41eb-9880-e91d926e2cb5';
+    console.log(req.userid);
     return this.productService.handleProductCreation(
       createProductDto,
       images,
-      sellerId,
+      req.userid,
     );
   }
 
@@ -49,7 +59,7 @@ export class ProductController {
     @UploadedFiles() images: Express.Multer.File[],
     @Body() createProductDto: CreateCarDto,
   ) {
-    const sellerId = 'c5407532-a6e1-41eb-9880-e91d926e2cb5';
+    const sellerId = '36c77915-cd87-486d-af89-90b94bf9b453';
     return this.productService.handleProductCreation(
       createProductDto,
       images,
@@ -65,7 +75,7 @@ export class ProductController {
     @UploadedFiles() images: Express.Multer.File[],
     @Body() createProductDto: CreateWatchDto,
   ) {
-    const sellerId = 'c5407532-a6e1-41eb-9880-e91d926e2cb5';
+    const sellerId = '36c77915-cd87-486d-af89-90b94bf9b453';
     return this.productService.handleProductCreation(
       createProductDto,
       images,
@@ -81,7 +91,7 @@ export class ProductController {
     @UploadedFiles() images: Express.Multer.File[],
     @Body() createProductDto: CreateYachtDto,
   ) {
-    const sellerId = 'c5407532-a6e1-41eb-9880-e91d926e2cb5';
+    const sellerId = '36c77915-cd87-486d-af89-90b94bf9b453';
     return this.productService.handleProductCreation(
       createProductDto,
       images,
@@ -97,7 +107,7 @@ export class ProductController {
     @UploadedFiles() images: Express.Multer.File[],
     @Body() createProductDto: CreateJewelleryDto,
   ) {
-    const sellerId = 'c5407532-a6e1-41eb-9880-e91d926e2cb5';
+    const sellerId = '36c77915-cd87-486d-af89-90b94bf9b453';
     return this.productService.handleProductCreation(
       createProductDto,
       images,
@@ -129,6 +139,22 @@ export class ProductController {
   @Get('/seller/:sellerId')
   findProductBySellerId(@Param('sellerId') sellerId: string) {
     return this.productService.findProductBySellerId(sellerId);
+  }
+
+  @Patch(':id')
+  @ApiConsumes('application/json')
+  async updateProduct(
+    @Param('id') id: string,
+    @Body() updateProductDto: UpdateProductDto,
+  ) {
+    const updatedProduct = await this.productService.updateProduct(
+      id,
+      updateProductDto,
+    );
+    if (!updatedProduct) {
+      throw new NotFoundException(`Product with ID ${id} not found`);
+    }
+    return updatedProduct;
   }
 
   @Patch('trending/:id')

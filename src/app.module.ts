@@ -13,6 +13,10 @@ import { ContactModule } from './main/contact/contact.module';
 import { CacheModule } from '@nestjs/cache-manager';
 import { RealEstateModule } from './main/real-estate/real-estate.module';
 import { YachtModule } from './main/yacht/yacht.module';
+import { RolesGuard } from './guards/role.guard';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from './guards/auth.guard';
+import { HelperModule } from './utils/helper/helper.module';
 
 
 @Module({
@@ -33,7 +37,21 @@ import { YachtModule } from './main/yacht/yacht.module';
     }),
     RealEstateModule,
     YachtModule,
+ 
 
+ 
+    HelperModule,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+ 
   ],
 })
 export class AppModule {}
