@@ -30,7 +30,7 @@ export class PaymentService {
         },
         line_items: [
           {
-            price: 'price_1RpFIdFl8CziaLNQV53nMwTQ',
+            price: process.env.STRIPE_PRICE_ID as string,
             quantity: 1,
           },
         ],
