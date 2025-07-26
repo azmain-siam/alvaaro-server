@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Inject, Injectable } from '@nestjs/common';
 import { CreateSellerDto } from './dto/create-seller.dto';
 import { UpdateSellerDto } from './dto/update-seller.dto';
@@ -7,6 +8,7 @@ import { Cache } from 'cache-manager';
 import { MailService } from 'src/utils/mail/mail.service';
 import { OtpDto } from '../auth/dto/signin.dto';
 import { ApiResponse } from 'src/utils/common/apiresponse/apiresponse';
+import { VerificationStatusType } from '@prisma/client';
 
 @Injectable()
 export class SellerService {
@@ -21,7 +23,7 @@ export class SellerService {
     userEmail: string,
   ) {
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    // console.log(`Generated OTP: ${otp} for email: ${userEmail}`);
+    console.log(`Generated OTP: ${otp} for email: ${userEmail}`);
     const cacheKey = `otp-${userEmail}`;
     const sellerInfoKey = `seller-info-${userEmail}`;
 
@@ -84,8 +86,40 @@ export class SellerService {
     return ApiResponse.success(result, 'Seller created successfully');
   }
 
-  findAll() {
-    return this.prisma.seller.findMany();
+  async findAll(filters: {
+    verificationStatus?: VerificationStatusType;
+    subscriptionStatus?: string;
+    search?: string;
+  }) {
+    try {
+      const { verificationStatus, subscriptionStatus, search } = filters;
+
+      const result = await this.prisma.seller.findMany({
+        where: {
+          ...(verificationStatus && { verificationStatus }), // ✅ no "in"
+          ...(subscriptionStatus && {
+            subscriptionStatus: subscriptionStatus === 'ACTIVE',
+          }),
+          ...(search && {
+            OR: [
+              { user: { fullName: { contains: search, mode: 'insensitive' } } },
+              { user: { email: { contains: search, mode: 'insensitive' } } },
+            ],
+          }),
+        },
+        include: {
+          user: true,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
+
+      return ApiResponse.success(result, 'Sellers retrieved successfully!');
+    } catch (error) {
+      console.error(error);
+      return ApiResponse.error('Failed to retrieve sellers', error);
+    }
   }
 
   findOne(id: number) {

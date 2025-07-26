@@ -12,7 +12,7 @@ model User {
   fullName  String
   email     String   @unique
   password  String
-  images     String
+  images    String
   role      UserRole @default(USER)
   isDeleted Boolean  @default(false)
   Seller    Seller?
@@ -21,9 +21,9 @@ model User {
 }
 
 model Seller {
-  id                 String             @unique @default(uuid())
-  userId             String             @unique
-  user               User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                 String                    @unique @default(uuid())
+  userId             String                    @unique
+  user               User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
   companyName        String
   companyWebsite     String
   phone              String
@@ -31,11 +31,11 @@ model Seller {
   state              String
   city               String
   zip                String
-  isVerified         Boolean            @default(false)
-  subscriptionStatus Boolean            @default(false)
+  verificationStatus VerificationStatusType    @default(PENDING)
+  subscriptionStatus Boolean                   @default(false)
   Subscriptions      UserSubscriptionValidity?
-  createdAt          DateTime           @default(now())
-  updatedAt          DateTime           @updatedAt
+  createdAt          DateTime                  @default(now())
+  updatedAt          DateTime                  @updatedAt
   Product            Product[]
 }
 
@@ -156,14 +156,14 @@ model Yacht {
 
 // Subscription Plans
 model SubscriptionPlan {
-  id                String               @id @default(uuid())
-  type              SubscriptionPlanType @unique
+  id                String                    @id @default(uuid())
+  type              SubscriptionPlanType      @unique
   length            String
   price             String
   features          String[]
-  status            Boolean              @default(false)
-  createdAt         DateTime             @default(now())
-  updatedAt         DateTime             @updatedAt
+  status            Boolean                   @default(false)
+  createdAt         DateTime                  @default(now())
+  updatedAt         DateTime                  @updatedAt
   UserSubscriptions UserSubscriptionValidity?
 }
 
@@ -202,4 +202,10 @@ enum SubscriptionPlanType {
   BASIC
   BUSINESS
   ENTERPRISE
+}
+
+enum VerificationStatusType {
+  PENDING
+  VERIFIED
+  REJECTED
 }

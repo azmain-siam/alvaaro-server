@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
   Controller,
   Get,
@@ -8,6 +9,7 @@ import {
   Delete,
   UseGuards,
   Req,
+  Query,
 } from '@nestjs/common';
 import { SellerService } from './seller.service';
 import { CreateSellerDto } from './dto/create-seller.dto';
@@ -18,6 +20,8 @@ import { OtpDto } from '../auth/dto/signin.dto';
 import { Roles } from 'src/guards/roles.decorator';
 import { RolesGuard } from 'src/guards/role.guard';
 import { UserRole } from 'src/utils/common/enum/userEnum';
+import { ApiQuery } from '@nestjs/swagger';
+import { VerificationStatusType } from '@prisma/client';
 
 @UseGuards(AuthGuard)
 @Controller('seller')
@@ -46,8 +50,34 @@ export class SellerController {
   @Get()
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
-  findAll() {
-    return this.sellerService.findAll();
+  @ApiQuery({
+    name: 'verificationStatus',
+    required: false,
+    enum: ['PENDING', 'VERIFIED', 'REJECTED'],
+  })
+  @ApiQuery({
+    name: 'subscriptionStatus',
+    required: false,
+    enum: ['ACTIVE', 'INACTIVE'],
+  })
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    description: 'Search by owner name or email',
+  })
+  async findAll(
+    @Query('verificationStatus')
+    verificationStatus?: VerificationStatusType,
+    @Query('subscriptionStatus') subscriptionStatus?: string,
+    @Query('search') search?: string,
+  ) {
+    // console.log(verificationStatus, subscriptionStatus, search);
+    // const {verificationStatus, subscriptionStatus, search} =
+    return await this.sellerService.findAll({
+      verificationStatus,
+      subscriptionStatus,
+      search,
+    });
   }
 
   @Get(':id')
