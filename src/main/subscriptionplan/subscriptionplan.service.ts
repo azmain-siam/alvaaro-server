@@ -21,7 +21,7 @@ export class SubscriptionplanService {
         where: { type: dto.type },
         update: data,
         // status er beparta bjte pari nai
-        create: { ...dto, status: true },
+        create: { ...dto },
       });
 
       return ApiResponse.success(
@@ -46,7 +46,7 @@ export class SubscriptionplanService {
 
   async updatePlanByAdmin(planId: string, dto: UpdateSubscriptionplanDto) {
     try {
-      const { features, length, price, type } = dto;
+      const { length, price, type } = dto;
 
       const isPlanExists = await this.prisma.subscriptionPlan.findUnique({
         where: {
@@ -65,7 +65,6 @@ export class SubscriptionplanService {
         },
         data: {
           length,
-          features,
           price,
           type,
         },

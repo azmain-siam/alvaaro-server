@@ -1,8 +1,4 @@
-import {
-  HttpException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from '../../prisma-service/prisma-service.service';
@@ -11,13 +7,12 @@ import { JwtService } from '@nestjs/jwt';
 import { PasswordDto } from './dto/passwords.dto';
 import { ApiResponse } from 'src/utils/common/apiresponse/apiresponse';
 
-
 @Injectable()
 export class AuthService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
-  ) { }
+  ) {}
 
   async signup(createUserDto: CreateUserDto, imageUrl: string) {
     try {
@@ -35,11 +30,20 @@ export class AuthService {
         saltOrRounds,
       );
 
+      // Ensure 'images' property is included, as Prisma expects a string
+      const { images, ...rest } = createUserDto;
+      let imagesString: string;
+      if (Array.isArray(images)) {
+        // Convert array of files to a JSON string or comma-separated string as needed
+        imagesString = JSON.stringify(images);
+      } else {
+        imagesString = images ?? '';
+      }
       const data = {
-        ...createUserDto,
+        ...rest,
         password: hashedPassword,
-        images: imageUrl,
-
+        image: imageUrl,
+        images: imagesString,
       };
 
       const result = await this.prisma.user.create({ data });
@@ -93,7 +97,7 @@ export class AuthService {
       };
     }
   }
-  
+
   async changePassword(id: string, dto: PasswordDto) {
     const user = await this.prisma.user.findUnique({ where: { id } });
 
