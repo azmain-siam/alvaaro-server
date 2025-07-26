@@ -16,9 +16,13 @@ export class PaymentService {
 
   async createCheckoutSession(userId?: string, email?: string) {
     try {
+      const customerById =
+        await this.stripe.customers.retrieve('cus_SkmMJK7QaFEpnA');
+
       const session = await this.stripe.checkout.sessions.create({
         payment_method_types: ['card'],
         mode: 'subscription',
+        customer: customerById.id,
         // customer_creation: 'always', // This ensures customer is created
         metadata: {
           userId: userId || '12345',
@@ -52,7 +56,7 @@ export class PaymentService {
       sig,
       'whsec_4rlZh4UACRNgszCPqLcYHMCpSxeMfwId', // Replace with your actual webhook secret
     );
-    console.log('Webhook event received:', event);
+    console.log('Webhook event received:', event.data.object);
     // switch (event.type) {
     //   case 'customer.subscription.created':
     //   case 'customer.subscription.updated': {

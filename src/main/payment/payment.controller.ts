@@ -35,7 +35,6 @@ export class PaymentController {
   ) {
     try {
       await this.stripeService.handleWebhook(req.body, sig);
-      res.status(200).send({ received: true });
     } catch (err) {
       console.error('Webhook error:', err);
       res.status(400).send(`Webhook Error: ${err.message}`);
