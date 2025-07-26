@@ -6,12 +6,7 @@ export class PaymentService {
   private stripe: Stripe;
 
   constructor() {
-    this.stripe = new Stripe(
-      'sk_test_51R5NAuFl8CziaLNQUMjQuhbOKbnrQmhRtqEwQP6ac8FpzjApNQLiGH2IbbuoM473ge7JZO91Fhi1YGnsMHZeHlKD00TSUsE8AX',
-      {
-        apiVersion: '2025-06-30.basil',
-      },
-    );
+    this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {});
   }
 
   async createCheckoutSession(userId?: string, email?: string) {
@@ -23,7 +18,6 @@ export class PaymentService {
         payment_method_types: ['card'],
         mode: 'subscription',
         customer: customerById.id,
-        // customer_creation: 'always', // This ensures customer is created
         metadata: {
           userId: userId || '12345',
           email: email || 'shanto@example.com',
@@ -54,7 +48,7 @@ export class PaymentService {
     const event = this.stripe.webhooks.constructEvent(
       payload,
       sig,
-      'whsec_4rlZh4UACRNgszCPqLcYHMCpSxeMfwId', // Replace with your actual webhook secret
+      process.env.STRIPE_WEBHOOK_SECRET as string,
     );
     console.log('Webhook event received:', event.data.object);
     // switch (event.type) {
