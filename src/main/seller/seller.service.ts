@@ -21,7 +21,7 @@ export class SellerService {
     userEmail: string,
   ) {
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    console.log(`Generated OTP: ${otp} for email: ${userEmail}`);
+    // console.log(`Generated OTP: ${otp} for email: ${userEmail}`);
     const cacheKey = `otp-${userEmail}`;
     const sellerInfoKey = `seller-info-${userEmail}`;
 
