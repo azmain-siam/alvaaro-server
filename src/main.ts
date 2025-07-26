@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AllExceptionsFilter } from './utils/common/filter/all-exceptions.filter';
+import * as bodyParser from 'body-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -39,7 +40,8 @@ async function bootstrap() {
   );
 
   SwaggerModule.setup('api', app, documentFactory);
-
+  // * add body parser
+  app.use('/stripe/webhook', bodyParser.raw({ type: 'application/json' }));
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

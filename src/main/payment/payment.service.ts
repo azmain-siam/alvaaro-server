@@ -1,0 +1,69 @@
+import { Injectable } from '@nestjs/common';
+import Stripe from 'stripe';
+
+@Injectable()
+export class PaymentService {
+  private stripe: Stripe;
+
+  constructor() {
+    this.stripe = new Stripe(
+      'sk_test_51R5NAuFl8CziaLNQUMjQuhbOKbnrQmhRtqEwQP6ac8FpzjApNQLiGH2IbbuoM473ge7JZO91Fhi1YGnsMHZeHlKD00TSUsE8AX',
+      {
+        apiVersion: '2025-06-30.basil',
+      },
+    );
+  }
+
+  async createCheckoutSession(userId?: string, email?: string) {
+    try {
+      const session = await this.stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        mode: 'subscription',
+        // customer_creation: 'always', // This ensures customer is created
+        metadata: {
+          userId: userId || '12345',
+          email: email || 'shanto@example.com',
+        },
+        subscription_data: {
+          metadata: {
+            userId: userId || '12345',
+            email: email || 'shanto@example.com',
+          },
+        },
+        line_items: [
+          {
+            price: 'price_1RpFIdFl8CziaLNQV53nMwTQ',
+            quantity: 1,
+          },
+        ],
+        success_url: 'http://localhost:3000/stripe/payment-success',
+        cancel_url: 'http://localhost:3000/stripe/payment-cancel',
+      });
+      console.log('Session created:', session);
+      return { url: session.url };
+    } catch (error) {
+      console.error('Error creating checkout session:', error);
+      throw error;
+    }
+  }
+  handleWebhook(payload: Buffer, sig: string) {
+    const event = this.stripe.webhooks.constructEvent(
+      payload,
+      sig,
+      'whsec_4rlZh4UACRNgszCPqLcYHMCpSxeMfwId', // Replace with your actual webhook secret
+    );
+    console.log('Webhook event received:', event);
+    // switch (event.type) {
+    //   case 'customer.subscription.created':
+    //   case 'customer.subscription.updated': {
+    //     const subscription = event.data.object as Stripe.Subscription;
+    //     console.log('Subscription created or updated:', subscription);
+    //     break;
+    //   }
+
+    //   case 'customer.subscription.deleted': {
+    //     break;
+    //   }
+    // }
+  }
+}
